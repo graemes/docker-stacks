@@ -3,7 +3,8 @@
 
 # Ubuntu 16.04 (xenial) from 2018-02-28
 # https://github.com/docker-library/official-images/commit/8728671fdca3dfc029be4ab838ab5315aa125181
-FROM ubuntu:xenial-20180228@sha256:e348fbbea0e0a0e73ab0370de151e7800684445c509d46195aef73e090a49bd6
+#FROM ubuntu:xenial-20180228@sha256:e348fbbea0e0a0e73ab0370de151e7800684445c509d46195aef73e090a49bd6
+FROM nvidia/cuda:9.1-devel 
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
