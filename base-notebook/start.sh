@@ -70,10 +70,11 @@ if [ $(id -u) == 0 ] ; then
         usermod -u $NB_UID $NB_USER
     fi
 
-    # Change GID of NB_USER to NB_GID if it does not match
+    # Add NB_USER to NB_GID if it's not the default group
     if [ "$NB_GID" != $(id -g $NB_USER) ] ; then
-        echo "Set $NB_USER GID to: $NB_GID"
-        groupmod -g $NB_GID -o $(id -g -n $NB_USER)
+        echo "Add $NB_USER to group: $NB_GID"
+        groupadd -g $NB_GID -o $NB_USER
+        usermod -a -G $NB_GID $NB_USER
     fi
 
     # Enable sudo if requested
@@ -88,7 +89,7 @@ if [ $(id -u) == 0 ] ; then
     # Exec the command as NB_USER with the PATH and the rest of
     # the environment preserved
     echo "Executing the command: $cmd"
-    exec sudo -E -H -u $NB_USER PATH=$PATH PYTHONPATH=$PYTHONPATH $cmd
+    exec sudo -E -H -u $NB_USER PATH=$PATH XDG_CACHE_HOME=/home/$NB_USER/.cache PYTHONPATH=$PYTHONPATH $cmd
 else
     if [[ "$NB_UID" == "$(id -u jovyan)" && "$NB_GID" == "$(id -g jovyan)" ]]; then
         # User is not attempting to override user/group via environment
