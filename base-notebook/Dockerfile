@@ -89,10 +89,10 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
     'notebook=5.6.*' \
-    'jupyterhub=0.8.*' \
-    'jupyterlab=0.32.*' && \
+    'jupyterhub=0.9.*' \
+    'jupyterlab=0.34.*' && \
     conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.8.1 && \
+    jupyter labextension install @jupyterlab/hub-extension@^0.11.0 && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \

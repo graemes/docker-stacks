@@ -11,22 +11,33 @@ else
     cmd=$*
 fi
 
-for f in /usr/local/bin/start-notebook.d/*; do
-  case "$f" in
-    *.sh)
-      echo "$0: running $f"; . "$f"
-      ;;
-    *)
-      if [ -x $f ]; then
-        echo "$0: running $f"
-        $f
-      else
-        echo "$0: ignoring $f"
-      fi
-      ;;
-  esac
-  echo
-done
+run-hooks () {
+    # Source scripts or run executable files in a directory
+    if [[ ! -d "$1" ]] ; then
+	return
+    fi
+    echo "$0: running hooks in $1"
+    for f in "$1"/*; do
+	case "$f" in
+	    *.sh)
+		echo "$0: running $f"
+		source "$f"
+		;;
+	    *)
+		if [[ -x "$f" ]] ; then
+		    echo "$0: running $f"
+		    "$f"
+		else
+		    echo "$0: ignoring $f"
+		fi
+		;;
+	esac
+    echo "$0: done running hooks in $1"
+    done
+}
+
+run-hooks /usr/local/bin/start-notebook.d
+
 # Handle special flags if we're root
 if [ $(id -u) == 0 ] ; then
 
@@ -70,11 +81,12 @@ if [ $(id -u) == 0 ] ; then
         usermod -u $NB_UID $NB_USER
     fi
 
-    # Add NB_USER to NB_GID if it's not the default group
+    # Set NB_USER primary gid to NB_GID (after making the group).  Set
+    # supplementary gids to NB_GID and 100.
     if [ "$NB_GID" != $(id -g $NB_USER) ] ; then
         echo "Add $NB_USER to group: $NB_GID"
-        groupadd -g $NB_GID -o $NB_USER
-        usermod -a -G $NB_GID $NB_USER
+        groupadd -g $NB_GID -o ${NB_GROUP:-${NB_USER}}
+        usermod -g $NB_GID -a -G $NB_GID,100 $NB_USER
     fi
 
     # Enable sudo if requested
@@ -88,6 +100,7 @@ if [ $(id -u) == 0 ] ; then
 
     # Exec the command as NB_USER with the PATH and the rest of
     # the environment preserved
+    run-hooks /usr/local/bin/before-notebook.d
     echo "Executing the command: $cmd"
     exec sudo -E -H -u $NB_USER PATH=$PATH XDG_CACHE_HOME=/home/$NB_USER/.cache PYTHONPATH=$PYTHONPATH $cmd
 else
@@ -131,6 +144,7 @@ else
     fi
 
     # Execute the command
+    run-hooks /usr/local/bin/before-notebook.d
     echo "Executing the command: $cmd"
     exec $cmd
 fi
