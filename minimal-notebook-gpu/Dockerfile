@@ -44,13 +44,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     nano \
     cuda-cudart-$CUDA_PKG_VERSION \
     cuda-compat-10-0=410.48-1 \
-    cuda-libraries-$CUDA_PKG_VERSION \
-    cuda-nvtx-$CUDA_PKG_VERSION \
-    cuda-libraries-dev-$CUDA_PKG_VERSION \
-    cuda-nvml-dev-$CUDA_PKG_VERSION \
-    cuda-minimal-build-$CUDA_PKG_VERSION \
-    cuda-command-line-tools-$CUDA_PKG_VERSION \
-    libnccl-dev=$NCCL_VERSION-2+cuda10.0 \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
