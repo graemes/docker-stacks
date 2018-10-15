@@ -1,0 +1,27 @@
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+
+FROM registry.graemes.com/graemes/jupyter-minimal-notebook-gpu:latest
+
+LABEL maintainer="Graeme Seaton <graemes@github>"
+
+USER root
+
+# Add cuda development libraries to notebook
+
+# Install all OS dependencies for fully functional notebook server
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    cuda-libraries-$CUDA_PKG_VERSION \
+    cuda-nvtx-$CUDA_PKG_VERSION \
+    cuda-libraries-dev-$CUDA_PKG_VERSION \
+    cuda-nvml-dev-$CUDA_PKG_VERSION \
+    cuda-minimal-build-$CUDA_PKG_VERSION \
+    cuda-command-line-tools-$CUDA_PKG_VERSION \
+    libnccl-dev=$NCCL_VERSION-2+cuda10.0 \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
