@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 #FROM jupyter/scipy-notebook
-FROM registry.graemes.com/graemes/jupyter-minimal-notebook-gpu-dev
+FROM registry.graemes.com/graemes/jupyter-minimal-notebook-dev
 
 LABEL maintainer="Graeme Seaton <graemes@github>"
 
