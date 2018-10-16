@@ -11,12 +11,11 @@ ARG TEST_ONLY_BUILD
 
 # Install Tensorflow
 RUN conda install --quiet --yes \
-    'tensorflow=1.5*' \
-    'keras=2.1*' && \
+    'tensorflow=1.11*' \
+    'keras=2.2*' && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
-
