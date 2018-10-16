@@ -36,8 +36,8 @@ ENV CONDA_DIR=/opt/conda \
     NB_GID=100 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    PATH=$CONDA_DIR/bin:$PATH \
+    LANGUAGE=en_US.UTF-8
+ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
