@@ -7,7 +7,7 @@ docker push registry.graemes.com/graemes/jupyter-base-notebook:latest
 
 BASE_REGISTRY="registry.graemes.com/graemes"
 BASE_CONTAINER="ubuntu:18.04"
-GPU_CONTAINER="cuda:10.0-runtime"
+GPU_CONTAINER="cuda:10.0-devel"
 OUTPUT_BASE="jupyter-base-notebook"
 
 docker pull ${BASE_CONTAINER}
