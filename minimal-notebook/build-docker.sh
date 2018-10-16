@@ -1,7 +1,19 @@
 #!/bin/sh
 
-docker pull registry.graemes.com/graemes/jupyter-base-notebook:latest
+BASE_REGISTRY="registry.graemes.com/graemes"
+BASE_CONTAINER="jupyter-base-notebook"
+OUTPUT_BASE="jupyter-minimal-notebook"
 
-docker build . -t registry.graemes.com/graemes/jupyter-minimal-notebook:latest  
-docker push registry.graemes.com/graemes/jupyter-minimal-notebook:latest
+docker pull ${BASE_REGISTRY}/${BASE_CONTAINER}
+docker pull ${BASE_REGISTRY}/${BASE_CONTAINER}:gpu
+
+docker build . \
+    -t ${BASE_REGISTRY}/${OUTPUT_BASE} \
+    --build-arg BUILD_CONTAINER=${BASE_REGISTRY}/${BASE_CONTAINER}
+docker push ${BASE_REGISTRY}/${OUTPUT_BASE}
+
+docker build . \
+    -t ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu \
+    --build-arg BUILD_CONTAINER=${BASE_REGISTRY}/${BASE_CONTAINER}:gpu
+docker push ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu
 

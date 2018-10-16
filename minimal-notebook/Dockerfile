@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-
-FROM registry.graemes.com/graemes/jupyter-base-notebook:latest
+ARG BUILD_CONTAINER=jupytper/base-notebook
+FROM $BUILD_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
