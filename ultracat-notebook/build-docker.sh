@@ -14,5 +14,6 @@ docker push ${BASE_REGISTRY}/${OUTPUT_BASE}
 
 docker build . \
     -t ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu \
+    -f Dockerfile.dev \
     --build-arg BUILD_CONTAINER=${BASE_REGISTRY}/${BASE_CONTAINER}:gpu
 docker push ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu
