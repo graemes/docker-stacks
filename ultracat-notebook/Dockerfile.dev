@@ -9,7 +9,15 @@ LABEL maintainer="Graeme Seaton <graemes@github>"
 # be skipped to shorten build time.
 ARG TEST_ONLY_BUILD
 
+ENV CUDNN_VERSION 7.3.1.20
+
 # Install Tensorflow
+RUN apt-get update && apt-get install -y --no-install-recommends \
+            libcudnn7=$CUDNN_VERSION-1+cuda10.0 \
+            libcudnn7-dev=$CUDNN_VERSION-1+cuda10.0 && \
+    apt-mark hold libcudnn7 && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN conda install --quiet --yes \
     'tensorflow-gpu=1.11*' \
     'keras=2.2*' && \
