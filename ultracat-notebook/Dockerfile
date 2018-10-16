@@ -10,8 +10,6 @@ LABEL maintainer="Graeme Seaton <graemes@github>"
 ARG TEST_ONLY_BUILD
 
 # Install Tensorflow
-USER $NB_UID
-
 RUN conda install --quiet --yes \
     'tensorflow=1.5*' \
     'keras=2.1*' && \
