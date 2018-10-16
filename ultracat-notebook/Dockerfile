@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-#FROM jupyter/scipy-notebook
-FROM registry.graemes.com/graemes/jupyter-datascience-notebook:gpu
+ARG BUILD_CONTAINER=jupytper/datascience-notebook
+FROM $BUILD_CONTAINER
 
 LABEL maintainer="Graeme Seaton <graemes@github>"
 
