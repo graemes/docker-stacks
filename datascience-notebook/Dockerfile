@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-#FROM jupyter/scipy-notebook
-FROM registry.graemes.com/graemes/jupyter-scipy-notebook
+ARG BUILD_CONTAINER=jupytper/scipy-notebook
+FROM $BUILD_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
