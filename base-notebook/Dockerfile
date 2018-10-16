@@ -4,7 +4,8 @@
 # Ubuntu 18.04 (bionic) from 2018-05-26
 # https://github.com/docker-library/official-images/commit/aac6a45b9eb2bffb8102353c350d341a410fb169
 #FROM ubuntu:bionic-20180526@sha256:c8c275751219dadad8fa56b3ac41ca6cb22219ff117ca98fe82b42f24e1ba64e
-FROM ubuntu:18.04
+ARG BUILD_CONTAINER=ubuntu:18.04
+FROM $BUILD_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -35,8 +36,8 @@ ENV CONDA_DIR=/opt/conda \
     NB_GID=100 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
-ENV PATH=$CONDA_DIR/bin:$PATH \
+    LANGUAGE=en_US.UTF-8 \
+    PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
@@ -110,9 +111,10 @@ ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
 # Add local files as late as possible to avoid cache busting
-COPY start.sh /usr/local/bin/
-COPY start-notebook.sh /usr/local/bin/
-COPY start-singleuser.sh /usr/local/bin/
+#COPY start.sh /usr/local/bin/
+#COPY start-notebook.sh /usr/local/bin/
+#COPY start-singleuser.sh /usr/local/bin/
+COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions /etc/jupyter/
 

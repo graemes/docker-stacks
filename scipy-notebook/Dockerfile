@@ -1,7 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-#FROM jupyter/minimal-notebook
-ARG BUILD_CONTAINER=registry.graemes.com/graemes/jupyter-minimal-notebook:latest
+ARG BUILD_CONTAINER=jupyter/minimal-notebook
 FROM $BUILD_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"

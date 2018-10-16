@@ -8,7 +8,8 @@ docker pull ${BASE_REGISTRY}/${BASE_CONTAINER}:latest
 docker pull ${BASE_REGISTRY}/${BASE_CONTAINER}-gpu:latest
 
 docker build . \
-    -t ${BASE_REGISTRY}/${OUTPUT_BASE}:latest
+    -t ${BASE_REGISTRY}/${OUTPUT_BASE}:latest \
+    --build-arg BUILD_CONTAINER=${BASE_REGISTRY}/${BASE_CONTAINER}:latest
 docker push ${BASE_REGISTRY}/${OUTPUT_BASE}:latest
 
 docker build . \
