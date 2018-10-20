@@ -15,10 +15,10 @@ docker pull ${BASE_REGISTRY}/${GPU_CONTAINER}
 
 docker build . \
     -t ${BASE_REGISTRY}/${OUTPUT_BASE} \
-    --build-arg BUILD_CONTAINER=${BASE_CONTAINER}
+    --build-arg BASE_CONTAINER=${BASE_CONTAINER}
 docker push ${BASE_REGISTRY}/${OUTPUT_BASE}
 
 docker build . \
     -t ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu \
-    --build-arg BUILD_CONTAINER=${BASE_REGISTRY}/${GPU_CONTAINER}
+    --build-arg BASE_CONTAINER=${BASE_REGISTRY}/${GPU_CONTAINER}
 docker push ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu

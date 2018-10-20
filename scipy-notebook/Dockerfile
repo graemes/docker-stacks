@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG BUILD_CONTAINER=jupyter/minimal-notebook
-FROM $BUILD_CONTAINER
+ARG BASE_CONTAINER=jupyter/minimal-notebook
+FROM $BASE_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -35,7 +35,7 @@ RUN conda install --quiet --yes \
     'cloudpickle=0.5*' \
     'dill=0.2*' \
     'numba=0.38*' \
-    'bokeh=0.12*' \
+    'bokeh=0.13*' \
     'sqlalchemy=1.2*' \
     'hdf5=1.10*' \
     'h5py=2.7*' \
@@ -49,7 +49,8 @@ RUN conda install --quiet --yes \
     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     # Also activate ipywidgets extension for JupyterLab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.37.0 && \
-    jupyter labextension install jupyterlab_bokeh@^0.6.0 && \
+    # Pin to 0.6.2 until we can move to Lab 0.35 (jupyterlab_bokeh didn't bump to 0.7.0)
+    jupyter labextension install jupyterlab_bokeh@0.6.2 && \
     npm cache clean --force && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
