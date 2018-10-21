@@ -2,7 +2,7 @@
 
 BASE_REGISTRY="registry.graemes.com/graemes/jupyter"
 BASE_CONTAINER=${BASE_REGISTRY}/"datascience-notebook"
-BASE_OUTPUT=${BASE_REGISTRY}/"ultracat-notebook"
+BASE_OUTPUT=${BASE_REGISTRY}/"all-notebook"
 GPU_CONTAINER="${BASE_CONTAINER}:gpu"
 GPU_OUTPUT="${BASE_OUTPUT}:gpu"
 

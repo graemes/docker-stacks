@@ -1,6 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG BUILD_CONTAINER=jupytper/datascience-notebook
+ARG BUILD_CONTAINER=jupyter/datascience-notebook
 FROM $BUILD_CONTAINER
 
 LABEL maintainer="Graeme Seaton <graemes@github>"
@@ -9,22 +9,17 @@ LABEL maintainer="Graeme Seaton <graemes@github>"
 # be skipped to shorten build time.
 ARG TEST_ONLY_BUILD
 
-ENV CUDNN_VERSION 7.3.1.20
-USER root
-
-# Install Tensorflow
-RUN apt-get update && apt-get install -y --no-install-recommends \
-            libcudnn7=$CUDNN_VERSION-1+cuda10.0 \
-            libcudnn7-dev=$CUDNN_VERSION-1+cuda10.0 && \
-    apt-mark hold libcudnn7 && \
-    rm -rf /var/lib/apt/lists/*
+# Install Tensorflow & watermark
+RUN conda install --quiet --yes \
+    'tensorflow=1.11*' \
+    'keras=2.2*' && \
+    conda clean -tipsy && \
+    jupyter labextension install @jupyterlab/git && \
+    jupyter labextension install @jupyterlab/toc && \
+    npm cache clean --force && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
-
-RUN conda install --quiet --yes \
-    'tensorflow-gpu=1.11*' \
-    'keras=2.2*' && \
-    conda clean -tipsy && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
