@@ -1,24 +1,20 @@
 #!/bin/sh
 
-docker pull ubuntu:18.04
-
-docker build . -t registry.graemes.com/graemes/jupyter-base-notebook:latest  
-docker push registry.graemes.com/graemes/jupyter-base-notebook:latest
-
-BASE_REGISTRY="registry.graemes.com/graemes"
+BASE_REGISTRY="registry.graemes.com/graemes/jupyter"
 BASE_CONTAINER="ubuntu:18.04"
-GPU_CONTAINER="cuda:10.0-devel"
-OUTPUT_BASE="jupyter-base-notebook"
+BASE_OUTPUT=${BASE_REGISTRY}/"base-notebook"
+GPU_CONTAINER=${BASE_REGISTRY}/"cuda:10.0-devel"
+GPU_OUTPUT="${BASE_OUTPUT}:gpu"
 
 docker pull ${BASE_CONTAINER}
-docker pull ${BASE_REGISTRY}/${GPU_CONTAINER}
+docker pull ${GPU_CONTAINER}
 
 docker build . \
-    -t ${BASE_REGISTRY}/${OUTPUT_BASE} \
+    -t ${BASE_OUTPUT} \
     --build-arg BASE_CONTAINER=${BASE_CONTAINER}
-docker push ${BASE_REGISTRY}/${OUTPUT_BASE}
+docker push ${BASE_OUTPUT}
 
 docker build . \
-    -t ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu \
-    --build-arg BASE_CONTAINER=${BASE_REGISTRY}/${GPU_CONTAINER}
-docker push ${BASE_REGISTRY}/${OUTPUT_BASE}:gpu
+    -t ${GPU_OUTPUT} \
+    --build-arg BASE_CONTAINER=${GPU_CONTAINER}
+docker push ${GPU_OUTPUT}

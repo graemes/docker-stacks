@@ -90,9 +90,10 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 RUN conda install --quiet --yes \
     'notebook=5.7.*' \
     'jupyterhub=0.9.*' \
-    'jupyterlab=0.34.*' && \
+    'jupyterlab=0.35.*' && \
     conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.11.0 && \
+    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+    jupyter labextension install @jupyterlab/git@^0.4.2 && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
