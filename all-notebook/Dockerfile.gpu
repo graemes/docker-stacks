@@ -24,11 +24,15 @@ USER $NB_UID
 
 RUN conda install --quiet --yes \
     'tensorflow-gpu=1.11*' \
-    'keras=2.2*' && \
+    'keras=2.2*' \
+    'watermark=1.*' \
+    numba cudatoolkit pyculib && \
     conda clean -tipsy && \
     jupyter labextension install @jupyterlab/git && \
     jupyter labextension install @jupyterlab/toc && \
-    npm cache clean --force && \
+    npm cache clean --force 
+
+RUN conda install -c defaults -c gpuopenanalytics/label/dev -c conda-forge pygdf && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
