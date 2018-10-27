@@ -14,12 +14,13 @@ RUN conda install --quiet --yes \
     'tensorflow=1.11*' \
     'keras=2.2*' && \
     conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/git && \
-    jupyter labextension install @jupyterlab/toc && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+    #jupyter labextension install @jupyterlab/git && \
+    #jupyter labextension install @jupyterlab/toc && \
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
