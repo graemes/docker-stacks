@@ -26,7 +26,7 @@ RUN conda install --quiet --yes \
     'matplotlib=2.2*' \
     'scipy=1.1*' \
     'seaborn=0.9*' \
-    'scikit-learn=0.19*' \
+    'scikit-learn=0.20*' \
     'scikit-image=0.14*' \
     'sympy=1.1*' \
     'cython=0.28*' \
@@ -48,9 +48,10 @@ RUN conda install --quiet --yes \
     # Activate ipywidgets extension in the environment that runs the notebook server
     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     # Also activate ipywidgets extension for JupyterLab
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.37.0 && \
-    # Pin to 0.6.2 until we can move to Lab 0.35 (jupyterlab_bokeh didn't bump to 0.7.0)
-    jupyter labextension install jupyterlab_bokeh@0.6.2 && \
+    # Check this URL for most recent compatibilities
+    # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+    jupyter labextension install jupyterlab_bokeh@0.6.3 && \
     npm cache clean --force && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     rm -rf /home/$NB_USER/.cache/yarn && \
