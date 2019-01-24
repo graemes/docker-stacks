@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BASE_REGISTRY="registry.graemes.com/graemes"
-BASE_CONTAINER="ubuntu:18.04"
+BASE_CONTAINER=${BASE_REGISTRY}/"ubuntubuild:18.04"
 BASE_OUTPUT=${BASE_REGISTRY}/"jupyter/base-notebook"
 GPU_CONTAINER=${BASE_REGISTRY}/"nvidia-cuda:10.0-devel"
 GPU_OUTPUT="${BASE_OUTPUT}:gpu"
