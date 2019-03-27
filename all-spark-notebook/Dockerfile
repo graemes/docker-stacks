@@ -15,19 +15,18 @@ RUN fix-permissions $R_LIBS_USER
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     fonts-dejavu \
-    tzdata \
     gfortran \
-    gcc && apt-get clean && \
+    gcc && \
     rm -rf /var/lib/apt/lists/*
 
 USER $NB_UID
 
 # R packages
 RUN conda install --quiet --yes \
-    'r-base=3.4.1' \
+    'r-base=3.5.1' \
     'r-irkernel=0.8*' \
-    'r-ggplot2=2.2*' \
-    'r-sparklyr=0.7*' \
+    'r-ggplot2=3.1*' \
+    'r-sparklyr=0.9*' \
     'r-rcurl=1.95*' && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR && \
