@@ -34,7 +34,7 @@ RUN conda install --quiet --yes \
 #    jupyter labextension install @jupyterlab/git && \
 #    jupyter labextension install @jupyterlab/toc && \
 
-RUN conda install -c defaults -c gpuopenanalytics/label/dev -c conda-forge pygdf && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+#RUN conda install -c defaults -c gpuopenanalytics/label/dev -c conda-forge pygdf && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
