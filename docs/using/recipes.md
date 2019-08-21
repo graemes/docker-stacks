@@ -1,6 +1,6 @@
 # Contributed Recipes
 
-Users sometimes share interesting ways of using the Jupyter Docker Stacks. We encourage users to [contribute these recipes](../contributing/recipes.html) to the documentation in case they prove useful to other members of the community by submitting a pull request to `docs/using/recipes.md`. The sections below capture this knowledge.
+Users sometimes share interesting ways of using the Jupyter Docker Stacks. We encourage users to [contribute these recipes](../contributing/recipes.md) to the documentation in case they prove useful to other members of the community by submitting a pull request to `docs/using/recipes.md`. The sections below capture this knowledge.
 
 ## Using `pip install` or `conda install` in a Child Docker image
 
@@ -58,7 +58,7 @@ FROM jupyter/scipy-notebook:latest
 # and the kernda utility. Add any additional packages you want available for use
 # in a Python 2 notebook to the first line here (e.g., pandas, matplotlib, etc.)
 RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 ipython ipykernel kernda && \
-    conda clean -tipsy
+    conda clean --all -f -y
 
 USER root
 
