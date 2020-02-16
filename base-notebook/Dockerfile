@@ -1,9 +1,10 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 18.04 (bionic) from 2019-06-12
-# https://github.com/tianon/docker-brew-ubuntu-core/commit/3c462555392cb188830b7c91e29311b5fad90cfe
-ARG BASE_CONTAINER=ubuntu:bionic-20190612@sha256:9b1702dcfe32c873a770a32cfd306dd7fc1c4fd134adfb783db68defc8894b3c
+# Ubuntu 18.04 (bionic)
+# https://hub.docker.com/_/ubuntu/?tab=tags&name=bionic
+ARG ROOT_CONTAINER=ubuntu:bionic-20200112@sha256:bc025862c3e8ec4a8754ea4756e33da6c41cba38330d7e324abd25c8e0b93300
+ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
@@ -42,8 +43,8 @@ ENV CONDA_DIR=/opt/conda \
 ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
-# Add a script that we will use to correct permissions after running certain commands
-ADD fix-permissions /usr/local/bin/fix-permissions
+# Copy a script that we will use to correct permissions after running certain commands
+COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
@@ -63,14 +64,15 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 
 USER $NB_UID
 WORKDIR $HOME
+ARG PYTHON_VERSION=default
 
 # Setup work directory for backward-compatibility
 RUN mkdir /home/$NB_USER/work && \
     fix-permissions /home/$NB_USER
 
 # Install conda as jovyan and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION=4.7.10 \
-    MINICONDA_MD5=1c945f2b3335c7b2b15130b1b2dc5cf4 \
+ENV MINICONDA_VERSION=4.7.12.1 \
+    MINICONDA_MD5=81c773ff87af5cfac79ab862942ab6b3 \
     CONDA_VERSION=4.7.12
 
 RUN cd /tmp && \
@@ -79,12 +81,14 @@ RUN cd /tmp && \
     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
-    $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
-    $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
-    $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    $CONDA_DIR/bin/conda install --quiet --yes conda && \
-    $CONDA_DIR/bin/conda update --all --quiet --yes && \
+    conda config --system --prepend channels conda-forge && \
+    conda config --system --set auto_update_conda false && \
+    conda config --system --set show_channel_urls true && \
+    if [ ! $PYTHON_VERSION = 'default' ]; then conda install --yes python=$PYTHON_VERSION; fi && \
     conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
+    conda install --quiet --yes conda && \
+    conda install --quiet --yes pip && \
+    conda update --all --quiet --yes && \
     conda clean --all -f -y && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
@@ -104,9 +108,9 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    'notebook=6.0.0' \
-    'jupyterhub=1.0.0' \
-    'jupyterlab=1.2.1' && \
+    'notebook=6.0.3' \
+    'jupyterhub=1.1.0' \
+    'jupyterlab=1.2.5' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
@@ -121,7 +125,7 @@ EXPOSE 8888
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
-# Add local files as late as possible to avoid cache busting
+# Copy local files as late as possible to avoid cache busting
 COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
