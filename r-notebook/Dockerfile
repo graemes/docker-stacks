@@ -28,8 +28,8 @@ RUN conda install --quiet --yes \
     'r-base=3.6.3' \
     'r-caret=6.0*' \
     'r-crayon=1.3*' \
-    'r-devtools=2.2*' \
-    'r-forecast=8.11*' \
+    'r-devtools=2.3*' \
+    'r-forecast=8.12*' \
     'r-hexbin=1.28*' \
     'r-htmltools=0.4*' \
     'r-htmlwidgets=1.5*' \
@@ -47,7 +47,7 @@ RUN conda install --quiet --yes \
     'unixodbc=2.3.*' \
     && \
     conda clean --all -f -y && \
-    fix-permissions $CONDA_DIR
+    fix-permissions "${CONDA_DIR}"
 
 # Install e1071 R package (dependency of the caret R package)
 RUN conda install --quiet --yes r-e1071
