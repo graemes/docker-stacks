@@ -13,9 +13,9 @@ USER root
 # Spark dependencies
 # Default values can be overridden at build time
 # (ARGS are in lower case to distinguish them from ENV)
-ARG spark_version="3.0.0"
+ARG spark_version="3.0.1"
 ARG hadoop_version="3.2"
-ARG spark_checksum="BFE45406C67CC4AE00411AD18CC438F51E7D4B6F14EB61E7BF6B5450897C2E8D3AB020152657C0239F253735C263512FFABF538AC5B9FFFA38B8295736A9C387"
+ARG spark_checksum="E8B47C5B658E0FBC1E57EEA06262649D8418AE2B2765E44DA53AAF50094877D17297CC5F0B9B35DF2CEEF830F19AA31D7E56EAD950BBE7F8830D6874F88CFC3C"
 ARG py4j_version="0.10.9"
 ARG openjdk_version="11"
 
@@ -50,7 +50,8 @@ ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-${py4j_versio
 USER $NB_UID
 
 # Install pyarrow
-RUN conda install --quiet -y 'pyarrow' && \
+RUN conda install --quiet --yes --satisfied-skip-solve \
+    'pyarrow=1.0.*' && \
     conda clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
