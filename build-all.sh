@@ -1,11 +1,19 @@
 #!/bin/bash
 
-for NOTEBOOK in "base-notebook" "minimal-notebook" "scipy-notebook" "datascience-notebook" \
-	        "all-notebook" "r-notebook" 
-#	        "all-notebook" "tensorflow-notebook" "r-notebook" \
-#		"pyspark-notebook" "all-spark-notebook"
+NOTEBOOKS="base-notebook minimal-notebook scipy-notebook datascience-notebook tensorflow-notebook r-notebook pyspark-notebook all-notebook all-spark-notebook"
+
+for NOTEBOOK in ${NOTEBOOKS}
 do
 	pushd ${NOTEBOOK}
-	./build-docker.sh
+	./build-docker-cpu.sh
+	popd
+done
+
+docker-clean-unused.sh
+
+for NOTEBOOK in ${NOTEBOOKS}
+do
+	pushd ${NOTEBOOK}
+	./build-docker-gpu.sh
 	popd
 done

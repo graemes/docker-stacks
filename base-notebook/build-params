@@ -1,0 +1,9 @@
+source ${HOME}/build/tools/build-params
+
+UBUNTU_VERSION="20.04"
+BASE_REGISTRY="registry.graemes.com/graemes"
+BASE_CONTAINER="${BASE_REGISTRY}/ubuntubuild:${UBUNTU_VERSION}"
+BASE_OUTPUT="${BASE_REGISTRY}/jupyter/base-notebook"
+GPU_CONTAINER="${BASE_REGISTRY}/nvidia-cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION}"
+GPU_OUTPUT="${BASE_OUTPUT}:gpu"
+

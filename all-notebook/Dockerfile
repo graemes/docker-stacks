@@ -18,17 +18,21 @@ ARG TEST_ONLY_BUILD
 #    fix-permissions /home/$NB_USER
 
 # Install Tensorflow & watermark
-RUN conda install --quiet --yes \
-    'tensorflow=1.13*' \
-    'keras=2.2*' && \
-    conda clean --all -f -y && \
-    npm cache clean --force && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+#RUN conda install --quiet --yes \
+#    'tensorflow=2.3.0' && \
+#    conda clean --all -f -y && \
+#    npm cache clean --force && \
+#    rm -rf /home/$NB_USER/.cache/yarn && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
 
     #jupyter labextension install @jupyterlab/git && \
     #jupyter labextension install @jupyterlab/toc && \
+# Install Tensorflow
+RUN pip install --quiet --no-cache-dir \
+    'tensorflow==2.3.0' && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
