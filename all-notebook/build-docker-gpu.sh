@@ -2,12 +2,17 @@
 
 source ./build-params
 
+echo "GPU container: ${GPU_CONTAINER}"
+echo "GPU Output: ${GPU_OUTPUT}"
+echo "GPU Output - cloud: ${GPU_OUTPUT_CLOUD}"
+
 docker pull ${GPU_CONTAINER}
 
 docker build . \
-	--squash \
-	-t ${GPU_OUTPUT} \
-	-f Dockerfile.gpu \
-	--build-arg BUILD_CONTAINER=${GPU_CONTAINER}
+       --squash \
+       -t ${GPU_OUTPUT} \
+       -t ${GPU_OUTPUT_CLOUD} \
+       --build-arg BASE_CONTAINER=${GPU_CONTAINER}
 
 docker push ${GPU_OUTPUT}
+docker push ${GPU_OUTPUT_CLOUD}

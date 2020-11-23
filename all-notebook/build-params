@@ -1,5 +1,11 @@
-BASE_REGISTRY="registry.graemes.com/graemes/jupyter"
-BASE_CONTAINER=${BASE_REGISTRY}/"datascience-notebook"
-BASE_OUTPUT=${BASE_REGISTRY}/"all-notebook"
-GPU_CONTAINER="${BASE_CONTAINER}:gpu"
-GPU_OUTPUT="${BASE_OUTPUT}:gpu"
+BASE_REGISTRY="registry.graemes.com/graemes"
+BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
+BASE_REPOSITORY="jupyter:all-notebook"
+
+BASE_CONTAINER=${BASE_REGISTRY}/"jupyter:datascience-notebook"
+BASE_OUTPUT="${BASE_REGISTRY}/${BASE_REPOSITORY}"
+BASE_OUTPUT_CLOUD="${BASE_REGISTRY_CLOUD}/${BASE_REPOSITORY}"
+
+GPU_CONTAINER="${BASE_CONTAINER}-gpu"
+GPU_OUTPUT="${BASE_OUTPUT}-gpu"
+GPU_OUTPUT_CLOUD="${BASE_OUTPUT_CLOUD}-gpu"

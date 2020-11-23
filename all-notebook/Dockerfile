@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG BUILD_CONTAINER=jupyter/datascience-notebook
-FROM $BUILD_CONTAINER
+ARG BASE_CONTAINER=jupyter:datascience-notebook
+FROM $BASE_CONTAINER
 
 LABEL maintainer="Graeme Seaton <graemes@github>"
 
