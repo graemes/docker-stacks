@@ -1,8 +1,8 @@
 BASE_REGISTRY="registry.graemes.com/graemes"
 BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
-BASE_REPOSITORY="jupyter:all-spark-notebook"
+BASE_REPOSITORY="jupyter/all-spark-notebook:latest"
 
-BASE_CONTAINER=${BASE_REGISTRY}/"jupyter:pyspark-notebook"
+BASE_CONTAINER=${BASE_REGISTRY}/"jupyter/pyspark-notebook:latest"
 BASE_OUTPUT="${BASE_REGISTRY}/${BASE_REPOSITORY}"
 BASE_OUTPUT_CLOUD="${BASE_REGISTRY_CLOUD}/${BASE_REPOSITORY}"
 

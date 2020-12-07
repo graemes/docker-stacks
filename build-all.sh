@@ -17,3 +17,5 @@ do
 	./build-docker-gpu.sh
 	popd
 done
+
+docker-clean-unused.sh

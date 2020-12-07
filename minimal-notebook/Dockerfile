@@ -36,3 +36,12 @@ RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
+
+RUN jupyter labextension install @jupyterlab/hub-extension && \
+    jupyter labextension install @jupyterlab/toc && \
+    conda install -c conda-forge jupyterlab jupyterlab-git && \
+    jupyter lab build && \
+    conda clean --all -f -y && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+

@@ -4,7 +4,7 @@ source ./build-params
 
 docker pull ${GPU_CONTAINER}
 
-echo "GPU container: ${GPU_CONTAINER}"
+echo "GPU Container: ${GPU_CONTAINER}"
 echo "GPU Output: ${GPU_OUTPUT}"
 echo "GPU Output - cloud: ${GPU_OUTPUT_CLOUD}"
 
