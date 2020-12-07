@@ -39,6 +39,9 @@ RUN jupyter labextension install @jupyterlab/hub-extension && \
     conda install -c conda-forge jupyterlab jupyterlab-git && \
     jupyter lab build && \
     conda clean --all -f -y && \
+    npm cache clean --force && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
