@@ -2,7 +2,8 @@ source ${HOME}/build/tools/build-params
 
 UBUNTU_VERSION="20.04"
 
-BASE_REGISTRY="registry.graemes.com/graemes"
+#BASE_REGISTRY="registry.graemes.com/graemes"
+BASE_REGISTRY="registry.graemes.cloud/graemes"
 BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
 BASE_REPOSITORY="jupyter/base-notebook:latest"
 
