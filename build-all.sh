@@ -7,6 +7,7 @@ function build-all-cpu() {
   do
     pushd ${NOTEBOOK}
     ./build-docker-cpu.sh 
+    docker system prune -f
     popd
   done
 }
@@ -16,6 +17,7 @@ function build-all-gpu() {
   do
     pushd ${NOTEBOOK}
     ./build-docker-gpu.sh 
+    docker system prune -f
     popd
   done
 }
