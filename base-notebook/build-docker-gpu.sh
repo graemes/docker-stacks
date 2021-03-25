@@ -15,4 +15,4 @@ docker build . \
 	--build-arg BASE_CONTAINER=${GPU_CONTAINER}
 
 docker push ${GPU_OUTPUT}
-docker push ${GPU_OUTPUT_CLOUD}
+#docker push ${GPU_OUTPUT_CLOUD}
