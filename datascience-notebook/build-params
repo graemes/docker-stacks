@@ -1,6 +1,5 @@
-#BASE_REGISTRY="registry.graemes.com/graemes"
-BASE_REGISTRY="registry.graemes.cloud/graemes"
-BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
+source ../build-params
+
 BASE_REPOSITORY="jupyter/datascience-notebook:latest"
 
 BASE_CONTAINER=${BASE_REGISTRY}/"jupyter/scipy-notebook:latest"
