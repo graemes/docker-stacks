@@ -19,17 +19,16 @@ RUN apt-get update --yes && \
     gcc && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Fix for devtools https://github.com/conda-forge/r-devtools-feedstock/issues/4
-RUN ln -s /bin/tar /bin/gtar
-
 USER ${NB_UID}
 
 # R packages including IRKernel which gets installed globally.
-RUN conda install --quiet --yes \
+# r-e1071: dependency of the caret R package
+RUN mamba install --quiet --yes \
     'r-base' \
     'r-caret' \
     'r-crayon' \
     'r-devtools' \
+    'r-e1071' \
     'r-forecast' \
     'r-hexbin' \
     'r-htmltools' \
@@ -38,19 +37,23 @@ RUN conda install --quiet --yes \
     'r-nycflights13' \
     'r-randomforest' \
     'r-rcurl' \
-    'r-rmarkdown' \
     'r-rodbc' \
     'r-rsqlite' \
     'r-shiny' \
-    'r-tidymodels' \
-    'r-tidyverse' \
     'unixodbc' && \
-    conda clean --all -f -y && \
+    mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Install e1071 R package (dependency of the caret R package)
-RUN conda install --quiet --yes 'r-e1071' && \
-    conda clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+# These packages are not easy to install under arm
+RUN set -x && \
+    arch=$(uname -m) && \
+    if [ "${arch}" == "x86_64" ]; then \
+        mamba install --quiet --yes \
+            'r-rmarkdown' \
+            'r-tidymodels' \
+            'r-tidyverse' && \
+            mamba clean --all -f -y && \
+            fix-permissions "${CONDA_DIR}" && \
+            fix-permissions "/home/${NB_USER}"; \
+    fi;

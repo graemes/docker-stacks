@@ -47,9 +47,7 @@ Docker destroys the container after notebook server exit, but any files written 
 CPU Architectures
 -----------------
 
-All published containers support amd64 (x86_64). The base-notebook and
-minimal-notebook containers also support arm64. The ambition is to have all
-containers support both amd64 and arm64.
+All published containers support amd64 (x86_64) and aarch64, except for datascience and tensorflow, which only support amd64 for now.
 
 Caveats for arm64 images
 ^^^^^^^^^^^^^^^^^^^^^^^^
