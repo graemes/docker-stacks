@@ -19,17 +19,28 @@ USER root
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
-# Install tini: init for containers
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --yes && \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
-    tini \
-    wget \
     ca-certificates \
-    sudo \
-    locales \
     fonts-liberation \
-    run-one && \
+    locales \
+    # - pandoc is used to convert notebooks to html files
+    #   it's not present in arm64 ubuntu image, so we install it here
+    pandoc \
+    # - run-one - a wrapper script that runs no more
+    #   than one unique  instance  of  some  command with a unique set of arguments,
+    #   we use `run-one-constantly` to support `RESTARTABLE` option
+    run-one \
+    sudo \
+    # - tini is installed as a helpful container entrypoint that reaps zombie
+    #   processes and such of the actual executable we want to start, see
+    #   https://github.com/krallin/tini#why-tini for details.
+    tini \
+    wget && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -108,6 +119,18 @@ RUN set -x && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
+# Using fixed version of mamba in arm, because the latest one has problems with arm under qemu
+# See: https://github.com/jupyter/docker-stacks/issues/1539
+RUN set -x && \
+    arch=$(uname -m) && \
+    if [ "${arch}" == "aarch64" ]; then \
+        mamba install --quiet --yes \
+            'mamba<0.18' && \
+            mamba clean --all -f -y && \
+            fix-permissions "${CONDA_DIR}" && \
+            fix-permissions "/home/${NB_USER}"; \
+    fi;
 
 # Install Jupyter Notebook, Lab, and Hub
 # Generate a notebook server config
