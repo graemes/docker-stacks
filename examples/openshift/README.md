@@ -101,9 +101,9 @@ To override the name for the notebook, the image used, and the password, you can
 
 ```bash
 oc new-app --template jupyter-notebook \
-  --param APPLICATION_NAME=mynotebook \
-  --param NOTEBOOK_IMAGE=jupyter/scipy-notebook:latest \
-  --param NOTEBOOK_PASSWORD=mypassword
+    --param APPLICATION_NAME=mynotebook \
+    --param NOTEBOOK_IMAGE=jupyter/scipy-notebook:latest \
+    --param NOTEBOOK_PASSWORD=mypassword
 ```
 
 You can deploy any of the Jupyter Project docker-stacks images.
@@ -127,16 +127,6 @@ To delete the notebook instance, run `oc delete` using a label selector for the 
 oc delete all,configmap --selector app=mynotebook
 ```
 
-## Enabling Jupyter Lab Interface
-
-To enable the Jupyter Lab interface for a deployed notebook set the `JUPYTER_ENABLE_LAB` environment variable.
-
-```bash
-oc set env dc/mynotebook JUPYTER_ENABLE_LAB=true
-```
-
-Setting the environment variable will trigger a new deployment and the Jupyter Lab interface will be enabled.
-
 ## Adding Persistent Storage
 
 You can upload notebooks and other files using the web interface of the notebook.
@@ -146,9 +136,9 @@ To add persistent storage run:
 
 ```bash
 oc set volume dc/mynotebook --add \
-      --type=pvc --claim-size=1Gi --claim-mode=ReadWriteOnce \
-      --claim-name mynotebook-data --name data \
-      --mount-path /home/jovyan
+    --type=pvc --claim-size=1Gi --claim-mode=ReadWriteOnce \
+    --claim-name mynotebook-data --name data \
+    --mount-path /home/jovyan
 ```
 
 When you have deleted the notebook instance, if using a persistent volume, you will need to delete it in a separate step.
@@ -239,9 +229,9 @@ Then deploy it using the name of the image stream created.
 
 ```bash
 oc new-app --template jupyter-notebook \
-  --param APPLICATION_NAME=mynotebook \
-  --param NOTEBOOK_IMAGE=datascience-notebook \
-  --param NOTEBOOK_PASSWORD=mypassword
+    --param APPLICATION_NAME=mynotebook \
+    --param NOTEBOOK_IMAGE=datascience-notebook \
+    --param NOTEBOOK_PASSWORD=mypassword
 ```
 
 Importing an image into OpenShift before deploying it means that when a notebook is started, the image need only be pulled from the internal OpenShift image registry rather than Docker Hub for each deployment.
