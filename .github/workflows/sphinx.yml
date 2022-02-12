@@ -1,13 +1,16 @@
-name: Build Sphinx Documentation
+name: Build Sphinx Documentation and check links
 
 on:
+  schedule:
+    # Weekly, at 03:00 on Monday UTC time
+    - cron: "0 3 * * 1"
   pull_request:
     paths:
       - ".github/workflows/sphinx.yml"
 
       - "docs/**"
       - ".readthedocs.yaml"
-      - "requirements-dev.txt"
+      - "requirements-docs.txt"
   push:
     branches:
       - main
@@ -17,7 +20,7 @@ on:
 
       - "docs/**"
       - ".readthedocs.yaml"
-      - "requirements-dev.txt"
+      - "requirements-docs.txt"
   workflow_dispatch:
 
 jobs:
@@ -34,12 +37,15 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x
+          python-version: "3.9"
 
       - name: Install Dev Dependencies
         run: |
           python -m pip install --upgrade pip
-          make dev-env
+          make install-docs-env
 
       - name: Build Documentation
         run: make docs
+
+      - name: Check Documentation URLs
+        run: make linkcheck-docs
