@@ -2,11 +2,11 @@
 # Distributed under the terms of the Modified BSD License.
 
 import logging
+import time
 from typing import Optional
+
 import pytest  # type: ignore
 import requests
-import time
-
 from conftest import TrackedContainer, find_free_port
 
 LOGGER = logging.getLogger(__name__)
@@ -15,12 +15,6 @@ LOGGER = logging.getLogger(__name__)
 @pytest.mark.parametrize(
     "env,expected_command,expected_start,expected_warnings",
     [
-        (
-            ["JUPYTER_ENABLE_LAB=yes"],
-            "jupyter lab",
-            True,
-            ["WARNING: JUPYTER_ENABLE_LAB is ignored"],
-        ),
         (None, "jupyter lab", True, []),
         (["DOCKER_STACKS_JUPYTER_CMD=lab"], "jupyter lab", True, []),
         (["RESTARTABLE=yes"], "run-one-constantly jupyter lab", True, []),
