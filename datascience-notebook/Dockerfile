@@ -16,7 +16,7 @@ USER root
 # Default values can be overridden at build time
 # (ARGS are in lower case to distinguish them from ENV)
 # Check https://julialang.org/downloads/
-ARG julia_version="1.7.3"
+ARG julia_version="1.8.0"
 
 # R pre-requisites
 RUN apt-get update --yes && \
@@ -61,13 +61,7 @@ USER ${NB_UID}
 
 # R packages including IRKernel which gets installed globally.
 # r-e1071: dependency of the caret R package
-RUN arch=$(uname -m) && \
-    if [ "${arch}" == "aarch64" ]; then \
-        # Prevent libmamba from sporadically hanging on arm64 under QEMU
-        # <https://github.com/mamba-org/mamba/issues/1611>
-        export G_SLICE=always-malloc; \
-    fi && \
-    mamba install --quiet --yes \
+RUN mamba install --quiet --yes \
     'r-base' \
     'r-caret' \
     'r-crayon' \
@@ -86,17 +80,17 @@ RUN arch=$(uname -m) && \
     'r-rsqlite' \
     'r-shiny' \
     'r-tidyverse' \
-    'rpy2' \
     'unixodbc' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# `r-tidymodels` is not easy to install under arm
+# `rpy2` and `r-tidymodels` are not easy to install under aarch64
 RUN set -x && \
     arch=$(uname -m) && \
     if [ "${arch}" == "x86_64" ]; then \
         mamba install --quiet --yes \
+            'rpy2' \
             'r-tidymodels' && \
             mamba clean --all -f -y && \
             fix-permissions "${CONDA_DIR}" && \

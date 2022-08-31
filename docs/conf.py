@@ -63,7 +63,7 @@ html_theme = "alabaster"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-# File above was generated using sphinx 4.3.2 with this command:
+# File above was generated using sphinx 4.5.0 with this command:
 # sphinx-quickstart --project "docker-stacks" --author "Project Jupyter" -v "latest" -r "latest" -l en --no-sep --no-makefile --no-batchfile
 # These are custom options for this project
 
@@ -73,6 +73,7 @@ html_logo = "_static/jupyter-logo.svg"
 html_theme_options = {
     "path_to_docs": "docs",
     "repository_url": "https://github.com/jupyter/docker-stacks",
+    "repository_branch": "main",
     "use_edit_page_button": True,
     "use_issues_button": True,
     "use_repository_button": True,
@@ -91,6 +92,7 @@ myst_heading_anchors = 3
 
 linkcheck_ignore = [
     r".*github\.com.*#",  # javascript based anchors
+    r"https://github\.com/jupyter/docker-stacks/settings/actions/runners/new\?arch=arm64&os=linux",  # only works for users with permissions to change runners
     r"https://docs.github\.com/.*",  # 403 error
     r"http://127\.0\.0\.1:49153/.*",  # example
     r"https://mybinder\.org/v2/gh/.*",  # lots of 500 errors
@@ -98,7 +100,7 @@ linkcheck_ignore = [
 ]
 
 linkcheck_allowed_redirects = {
-    r"https://results\.pre-commit\.ci/latest/github/jupyter/docker-stacks/master": r"https://results\.pre-commit\.ci/run/github/.*",  # Latest master CI build
+    r"https://results\.pre-commit\.ci/latest/github/jupyter/docker-stacks/main": r"https://results\.pre-commit\.ci/run/github/.*",  # Latest main CI build
     r"https://github\.com/jupyter/docker-stacks/issues/new.*": r"https://github\.com/login.*",  # GitHub wants user to be logon to use this features
     r"https://github\.com/orgs/jupyter/teams/docker-image-maintainers/members": r"https://github\.com/login.*",
 }

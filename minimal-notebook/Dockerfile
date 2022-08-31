@@ -21,8 +21,6 @@ RUN apt-get update --yes && \
     tzdata \
     unzip \
     vim-tiny \
-    # Inkscape is installed to be able to convert SVG files
-    inkscape \
     # git-over-ssh
     openssh-client \
     # less is needed to run help in R
@@ -39,7 +37,7 @@ RUN apt-get update --yes && \
 RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
 
 # Switch back to jovyan to avoid accidental container runs as root
-USER $NB_UID
+USER ${NB_UID}
 
 RUN jupyter labextension install @jupyterlab/toc && \
     conda install -c conda-forge jupyterlab jupyterlab-git && \
@@ -50,3 +48,6 @@ RUN jupyter labextension install @jupyterlab/toc && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+# Add R mimetype option to specify how the plot returns from R to the browser
+COPY --chown=${NB_UID}:${NB_GID} Rprofile.site /opt/conda/lib/R/etc/

@@ -15,7 +15,7 @@ THIS_DIR = Path(__file__).parent.resolve()
 @pytest.mark.parametrize(
     "test_file",
     # TODO: add local_sparklyr
-    ["local_pyspark", "local_spylon", "local_sparkR", "issue_1168"],
+    ["local_pyspark", "local_sparkR", "issue_1168"],
 )
 def test_nbconvert(container: TrackedContainer, test_file: str) -> None:
     """Check if Spark notebooks can be executed"""
@@ -32,14 +32,10 @@ def test_nbconvert(container: TrackedContainer, test_file: str) -> None:
     )
     logs = container.run_and_wait(
         timeout=60,
-        no_warnings=False,
         volumes={str(host_data_dir): {"bind": cont_data_dir, "mode": "ro"}},
         tty=True,
         command=["start.sh", "bash", "-c", command],
     )
-    warnings = TrackedContainer.get_warnings(logs)
-    # Some Spark warnings
-    assert len(warnings) == 5
 
     expected_file = f"{output_dir}/{test_file}.md"
     assert expected_file in logs, f"Expected file {expected_file} not generated"

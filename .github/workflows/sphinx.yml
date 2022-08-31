@@ -11,18 +11,15 @@ on:
       - "docs/**"
       - "README.md"
       - ".readthedocs.yaml"
-      - "requirements-docs.txt"
   push:
     branches:
       - main
-      - master
     paths:
       - ".github/workflows/sphinx.yml"
 
       - "docs/**"
       - "README.md"
       - ".readthedocs.yaml"
-      - "requirements-docs.txt"
   workflow_dispatch:
 
 jobs:
@@ -45,7 +42,7 @@ jobs:
       - name: Install Doc Dependencies 📦
         run: |
           pip install --upgrade pip
-          pip install -r requirements-docs.txt
+          pip install --upgrade -r docs/requirements.txt
 
       - name: Build Documentation 📖
         run: make docs

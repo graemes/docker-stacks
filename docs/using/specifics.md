@@ -41,42 +41,47 @@ ipython profile create
 
 You can build a `pyspark-notebook` image (and also the downstream `all-spark-notebook` image) with a different version of Spark by overriding the default value of the following arguments at build time.
 
-- Spark distribution is defined by the combination of the Spark and the Hadoop version and verified by the package checksum,
+- Spark distribution is defined by the combination of Spark, Hadoop and Scala versions and verified by the package checksum,
   see [Download Apache Spark](https://spark.apache.org/downloads.html) and the [archive repo](https://archive.apache.org/dist/spark/) for more information.
-  - `spark_version`: The Spark version to install (`3.0.0`).
-  - `hadoop_version`: The Hadoop version (`3.2`).
-  - `spark_checksum`: The package checksum (`BFE4540...`).
-- Spark can run with different OpenJDK versions.
-  - `openjdk_version`: The version of (JRE headless) the OpenJDK distribution (`11`), see [Ubuntu packages](https://packages.ubuntu.com/search?keywords=openjdk).
 
-For example here is how to build a `pyspark-notebook` image with Spark `2.4.7`, Hadoop `2.7` and OpenJDK `8`.
+  - `spark_version`: The Spark version to install (`3.3.0`).
+  - `hadoop_version`: The Hadoop version (`3.2`).
+  - `scala_version`: The Scala version (`2.13`, optional).
+  - `spark_checksum`: The package checksum (`BFE4540...`).
+  - `openjdk_version`: The version of the OpenJDK (JRE headless) distribution (`17`).
+    - This version needs to match the version supported by the Spark distribution used above.
+    - See [Spark Overview](https://spark.apache.org/docs/latest/#downloading) and [Ubuntu packages](https://packages.ubuntu.com/search?keywords=openjdk).
+
+- Starting with _Spark >= 3.2_ the distribution file might contain Scala version.
+
+For example here is how to build a `pyspark-notebook` image with Spark `3.2.0`, Hadoop `3.2` and OpenJDK `11`.
 
 ```bash
 # From the root of the project
 # Build the image with different arguments
 docker build --rm --force-rm \
-    -t jupyter/pyspark-notebook:spark-2.4.7 ./pyspark-notebook \
-    --build-arg spark_version=2.4.7 \
-    --build-arg hadoop_version=2.7 \
-    --build-arg spark_checksum=0F5455672045F6110B030CE343C049855B7BA86C0ECB5E39A075FF9D093C7F648DA55DED12E72FFE65D84C32DCD5418A6D764F2D6295A3F894A4286CC80EF478 \
-    --build-arg openjdk_version=8
+    -t jupyter/pyspark-notebook:spark-3.2.0 ./pyspark-notebook \
+    --build-arg spark_version=3.2.0 \
+    --build-arg hadoop_version=3.2 \
+    --build-arg spark_checksum=707DDE035926A50B75E53FCA72CADA519F3239B14A96546911CB4916A58DCF69A1D2BFDD2C7DD5899324DBD82B6EEAB9797A7B4ABF86736FFCA4C26D0E0BF0EE \
+    --build-arg openjdk_version=11
 
 # Check the newly built image
-docker run -it --rm jupyter/pyspark-notebook:spark-2.4.7 pyspark --version
+docker run -it --rm jupyter/pyspark-notebook:spark-3.2.0 pyspark --version
 
 # Welcome to
 #       ____              __
 #      / __/__  ___ _____/ /__
 #     _\ \/ _ \/ _ `/ __/  '_/
-#    /___/ .__/\_,_/_/ /_/\_\   version 2.4.7
+#    /___/ .__/\_,_/_/ /_/\_\   version 3.2.0
 #       /_/
-#
-# Using Scala version 2.11.12, OpenJDK 64-Bit Server VM, 1.8.0_275
+
+# Using Scala version 2.13.5, OpenJDK 64-Bit Server VM, 11.0.15
 ```
 
 ### Usage Examples
 
-The `jupyter/pyspark-notebook` and `jupyter/all-spark-notebook` images support the use of [Apache Spark](https://spark.apache.org/) in Python, R, and Scala notebooks.
+The `jupyter/pyspark-notebook` and `jupyter/all-spark-notebook` images support the use of [Apache Spark](https://spark.apache.org/) in Python and R notebooks.
 The following sections provide some examples of how to get started using them.
 
 #### Using Spark Local Mode
@@ -142,24 +147,6 @@ sc <- spark_connect(master = "local", config = conf)
 sdf_len(sc, 100, repartition = 1) %>%
     spark_apply(function(e) sum(e))
 # 5050
-```
-
-##### Local Mode in Scala
-
-Spylon kernel instantiates a `SparkContext` for you in variable `sc` after you configure Spark
-options in a `%%init_spark` magic cell.
-
-```python
-%%init_spark
-# Configure Spark to use a local master
-launcher.master = "local"
-```
-
-```scala
-// Sum of the first 100 whole numbers
-val rdd = sc.parallelize(0 to 100)
-rdd.sum()
-// 5050
 ```
 
 #### Connecting to a Spark Cluster in Standalone Mode
@@ -233,24 +220,6 @@ sc <- spark_connect(master = "spark://master:7077", config = conf)
 sdf_len(sc, 100, repartition = 1) %>%
     spark_apply(function(e) sum(e))
 # 5050
-```
-
-##### Standalone Mode in Scala
-
-Spylon kernel instantiates a `SparkContext` for you in variable `sc` after you configure Spark
-options in a `%%init_spark` magic cell.
-
-```python
-%%init_spark
-# Configure Spark to use a local master
-launcher.master = "spark://master:7077"
-```
-
-```scala
-// Sum of the first 100 whole numbers
-val rdd = sc.parallelize(0 to 100)
-rdd.sum()
-// 5050
 ```
 
 ### Define Spark Dependencies

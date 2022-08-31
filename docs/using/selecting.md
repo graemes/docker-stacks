@@ -18,8 +18,8 @@ The following sections describe these images, including their contents, relation
 
 ### jupyter/base-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/base-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/base-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/base-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/base-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/base-notebook/tags/)
 
 `jupyter/base-notebook` is a small image supporting the [options common across all core stacks](common.md).
@@ -40,8 +40,8 @@ It is the basis for all other stacks and contains:
 
 ### jupyter/minimal-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/minimal-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/minimal-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/minimal-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/minimal-notebook/tags/)
 
 `jupyter/minimal-notebook` adds command-line tools useful when working in Jupyter applications.
@@ -56,8 +56,8 @@ It contains:
 
 ### jupyter/r-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/r-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/r-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/r-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/r-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/r-notebook/tags/)
 
 `jupyter/r-notebook` includes popular packages from the R ecosystem listed below:
@@ -87,8 +87,8 @@ It contains:
 
 ### jupyter/scipy-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/scipy-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/scipy-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/scipy-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/scipy-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/scipy-notebook/tags/)
 
 `jupyter/scipy-notebook` includes popular packages from the scientific Python ecosystem.
@@ -129,8 +129,8 @@ It contains:
 
 ### jupyter/tensorflow-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/tensorflow-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/tensorflow-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/tensorflow-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/tensorflow-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/tensorflow-notebook/tags/)
 
 `jupyter/tensorflow-notebook` includes popular Python deep learning libraries.
@@ -140,8 +140,8 @@ It contains:
 
 ### jupyter/datascience-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/datascience-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/datascience-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/datascience-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/datascience-notebook/tags/)
 
 `jupyter/datascience-notebook` includes libraries for data analysis from the Julia, Python, and R
@@ -159,8 +159,8 @@ communities.
 
 ### jupyter/pyspark-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/pyspark-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/pyspark-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/pyspark-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/pyspark-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/pyspark-notebook/tags/)
 
 `jupyter/pyspark-notebook` includes Python support for Apache Spark.
@@ -171,11 +171,11 @@ communities.
 
 ### jupyter/all-spark-notebook
 
-[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/master/all-spark-notebook) |
-[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/master/all-spark-notebook/Dockerfile) |
+[Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/all-spark-notebook) |
+[Dockerfile commit history](https://github.com/jupyter/docker-stacks/commits/main/all-spark-notebook/Dockerfile) |
 [Docker Hub image tags](https://hub.docker.com/r/jupyter/all-spark-notebook/tags/)
 
-`jupyter/all-spark-notebook` includes Python, R, and Scala support for Apache Spark.
+`jupyter/all-spark-notebook` includes Python and R support for Apache Spark.
 
 - Everything in `jupyter/pyspark-notebook` and its ancestor images
 - [IRKernel](https://irkernel.github.io/) to support R code in Jupyter notebooks
@@ -183,7 +183,6 @@ communities.
   [sparklyr](https://spark.rstudio.com),
   [ggplot2](https://ggplot2.tidyverse.org)
   packages
-- [spylon-kernel](https://github.com/vericast/spylon-kernel) to support Scala code in Jupyter notebooks
 
 ### Image Relationships
 
@@ -202,9 +201,15 @@ Every Monday and whenever a pull request is merged, images are rebuilt and pushe
 Whenever a docker image is pushed to the container registry, it is tagged with:
 
 - a `latest` tag
-- a 12-character git commit SHA like `b9f6ce795cfc`
-- a date formatted like `2021-08-29`
-- a set of software version tags like `python-3.9.6` and `lab-3.0.16`
+- a 12-character git commit SHA like `0fd03d9356de`
+- a date formatted like `2022-08-04`
+- OS version like `ubuntu-22.04`
+- a set of software version tags like `python-3.10.5` and `lab-3.4.4`
+
+```{warning}
+- Tags before `2022-07-05` were sometimes incorrect. Please, do not rely on them.
+- All `arm64` images have _aarch64-_ tag prefix, for example `aarch64-python-3.10.5`.
+```
 
 For stability and reproducibility, you should either reference a date formatted
 tag from a date before the current date (in UTC time) or a git commit SHA older

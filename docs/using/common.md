@@ -10,12 +10,13 @@ This page describes the options supported by the startup script and how to bypas
 
 You can pass [Jupyter server options](https://jupyter-server.readthedocs.io/en/latest/operators/public-server.html) to the `start-notebook.sh` script when launching the container.
 
-1. For example, to secure the Notebook server with a custom password hashed using `IPython.lib.passwd()` instead of the default token,
+1. For example, to secure the Notebook server with a [custom password](https://jupyter-server.readthedocs.io/en/latest/operators/public-server.html#preparing-a-hashed-password)
+   hashed using `jupyter_server.auth.security.passwd()` instead of the default token,
    you can run the following (this hash was generated for `my-password` password):
 
    ```bash
    docker run -it --rm -p 8888:8888 jupyter/base-notebook \
-       start-notebook.sh --NotebookApp.password='sha1:7cca89c48283:e3c1f9fbc06d1d2aa59555dfd5beed925e30dd2c'
+       start-notebook.sh --NotebookApp.password='argon2:$argon2id$v=19$m=10240,t=10,p=8$JdAN3fe9J45NvK/EPuGCvA$O/tbxglbwRpOFuBNTYrymAEH6370Q2z+eS1eF4GM6Do'
    ```
 
 2. To set the [base URL](https://jupyter-server.readthedocs.io/en/latest/operators/public-server.html#running-the-notebook-with-a-customized-url-prefix) of the notebook server, you can run the following:
@@ -132,7 +133,7 @@ or executables (`chmod +x`) to be run to the paths below:
 - `/usr/local/bin/before-notebook.d/` - handled **after** all the standard options noted above are applied
   and ran right before the notebook server launches
 
-See the `run-hooks` function in the [`jupyter/base-notebook start.sh`](https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start.sh)
+See the `run-hooks` function in the [`jupyter/base-notebook start.sh`](https://github.com/jupyter/docker-stacks/blob/main/base-notebook/start.sh)
 script for execution details.
 
 ## SSL Certificates
@@ -165,10 +166,10 @@ The certificate file or PEM may contain one or more certificates (e.g., server, 
 
 For additional information about using SSL, see the following:
 
-- The [docker-stacks/examples](https://github.com/jupyter/docker-stacks/tree/master/examples)
+- The [docker-stacks/examples](https://github.com/jupyter/docker-stacks/tree/main/examples)
   for information about how to use
   [Let's Encrypt](https://letsencrypt.org/) certificates when you run these stacks on a publicly visible domain.
-- The [`jupyter_server_config.py`](https://github.com/jupyter/docker-stacks/blob/master/base-notebook/jupyter_server_config.py)
+- The [`jupyter_server_config.py`](https://github.com/jupyter/docker-stacks/blob/main/base-notebook/jupyter_server_config.py)
   file for how this Docker image generates a self-signed certificate.
 - The [Jupyter Server documentation](https://jupyter-server.readthedocs.io/en/latest/operators/public-server.html#securing-a-jupyter-server)
   for best practices about securing a public notebook server in general.

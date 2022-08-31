@@ -4,12 +4,8 @@ We greatly appreciate pull requests that extend the automated tests that vet the
 
 ## How the Tests Work
 
-A [GitHub Action workflow](https://github.com/jupyter/docker-stacks/blob/master/.github/workflows/docker.yml)
-runs the following commands against pull requests submitted to the `jupyter/docker-stacks` repository:
-
-1. `make build-all-multi` - which builds all the Docker images
-2. `make test-all` - which tests the newly created Docker images
-   This `make` command builds and then tests every docker image.
+A [GitHub Action workflow](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker.yml)
+runs tests against pull requests submitted to the `jupyter/docker-stacks` repository.
 
 We use `pytest` module to run tests on the image.
 `conftest.py` and `pytest.ini` in the `tests` folder define the environment in which tests are run.
@@ -22,7 +18,7 @@ If your test is located in `tests/<somestack>-notebook/`, it will be run against
 ```
 
 Many tests make use of global [pytest fixtures](https://docs.pytest.org/en/latest/reference/fixtures.html)
-defined in the [conftest.py](https://github.com/jupyter/docker-stacks/blob/master/tests/conftest.py) file.
+defined in the [conftest.py](https://github.com/jupyter/docker-stacks/blob/main/tests/conftest.py) file.
 
 ## Unit tests
 
@@ -40,8 +36,8 @@ Please follow the process below to add new tests:
    If you use `make`, call:
 
    ```bash
-   make build/somestack-notebook
-   make test/somestack-notebook
+   make build/<somestack>-notebook
+   make test/<somestack>-notebook
    ```
 
 3. [Submit a pull request](https://github.com/PointCloudLibrary/pcl/wiki/A-step-by-step-guide-on-preparing-and-submitting-a-pull-request)
