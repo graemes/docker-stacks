@@ -190,7 +190,7 @@ The following diagram depicts the build dependency tree of the core images. (i.e
 Any given image inherits the complete content of all ancestor images pointing to it.
 
 [![Image inheritance
-diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFzTEPgjAQhuHdX9Gws5sQjGzujsaYKxzmQrlr2msMGv-71K0srO_3XGud9NNA8DSfgzESCFlBSdi0xkvQAKTNugw4QnL6GIU10hvX-Zh7Z24OLLq2SjaxpvP10lX35vCf6pOxELFmUbQiUz4oQhYzMc3gCrRt2cWe_FKosmSjyFHC6OS1AwdQWCtyj7sfh523_BI9hKlQ25YdOFdv5fcH0kiEMA)
+diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFzrEKwjAQxvG9T3FkskM3KUrRJ3DTUShJe9XQ9C4kKbWK7266CCmCW_jnd_Apw03fanmDVwbQYidHE-qOKXj9RDjAvsrihxjVSGG80uZ0OcOkwx0sawrg0KD0mAsojqDiqyAOqJj7Kp4lYRGDJj1Ik6B1W5xvtJ0TlZbFiIDk2XWGp2-PA5nMDI9dWZfbXPy-bGWQsSI1-HeJ-7PCzt5K1ydq3RYnjSnW8v0BwS-D-w)
 
 ### Builds
 
@@ -201,14 +201,14 @@ Every Monday and whenever a pull request is merged, images are rebuilt and pushe
 Whenever a docker image is pushed to the container registry, it is tagged with:
 
 - a `latest` tag
-- a 12-character git commit SHA like `0fd03d9356de`
+- a 12-character git commit SHA like `9e63909e0317`
 - a date formatted like `2022-08-04`
 - OS version like `ubuntu-22.04`
 - a set of software version tags like `python-3.10.5` and `lab-3.4.4`
 
 ```{warning}
 - Tags before `2022-07-05` were sometimes incorrect. Please, do not rely on them.
-- All `arm64` images have _aarch64-_ tag prefix, for example `aarch64-python-3.10.5`.
+- Single-platform images have either `aarch64` or `x86_64` tag prefixes, for example `jupyter/base-notebook:aarch64-python-3.10.5`
 ```
 
 For stability and reproducibility, you should either reference a date formatted
@@ -239,7 +239,7 @@ See the [contributing guide](../contributing/stacks.md) for information about ho
 [csharp_b]: https://mybinder.org/v2/gh/tlinnet/csharp-notebook/master
 [education]: https://github.com/umsi-mads/education-notebook
 [education_b]: https://mybinder.org/v2/gh/umsi-mads/education-notebook/master
-[ihaskell]: https://github.com/jamesdbrock/ihaskell-notebook
+[ihaskell]: https://github.com/IHaskell/ihaskell-notebook
 [ihaskell_b]: https://mybinder.org/v2/gh/jamesdbrock/learn-you-a-haskell-notebook/master?urlpath=lab/tree/ihaskell_examples/ihaskell/IHaskell.ipynb
 [ihaskell_project]: https://github.com/IHaskell/IHaskell
 [java]: https://github.com/jbindinga/java-notebook

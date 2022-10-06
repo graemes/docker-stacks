@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 
 # Ubuntu 22.04 (jammy)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=jammy
+# https://hub.docker.com/_/ubuntu/tags?page=1&name=jammy
 ARG ROOT_CONTAINER=ubuntu:22.04
 
 FROM $ROOT_CONTAINER
@@ -32,7 +32,7 @@ RUN apt-get update --yes && \
     fonts-liberation \
     locales \
     # - pandoc is used to convert notebooks to html files
-    #   it's not present in arm64 ubuntu image, so we install it here
+    #   it's not present in aarch64 ubuntu image, so we install it here
     pandoc \
     # - run-one - a wrapper script that runs no more
     #   than one unique  instance  of  some  command with a unique set of arguments,

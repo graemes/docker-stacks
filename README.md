@@ -4,7 +4,7 @@
 [![Read the Docs badge](https://img.shields.io/readthedocs/jupyter-docker-stacks.svg)](https://jupyter-docker-stacks.readthedocs.io/en/latest/ "Documentation build status")
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/jupyter/docker-stacks/main.svg)](https://results.pre-commit.ci/latest/github/jupyter/docker-stacks/main "pre-commit.ci build status")
 [![Discourse badge](https://img.shields.io/discourse/users.svg?color=%23f37626&server=https%3A%2F%2Fdiscourse.jupyter.org)](https://discourse.jupyter.org/ "Jupyter Discourse Forum")
-[![Binder badge](https://static.mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jupyter/docker-stacks/main?filepath=README.ipynb "Launch a jupyter/base-notebook container on mybinder.org")
+[![Binder badge](https://static.mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jupyter/docker-stacks/main?urlpath=lab/tree/README.ipynb "Launch a jupyter/base-notebook container on mybinder.org")
 
 Jupyter Docker Stacks are a set of ready-to-run [Docker images](https://hub.docker.com/u/jupyter) containing Jupyter applications and interactive computing tools.
 You can use a stack image to do any of the following (and more):
@@ -18,7 +18,7 @@ You can use a stack image to do any of the following (and more):
 
 You can try a [relatively recent build of the jupyter/base-notebook image on mybinder.org](https://mybinder.org/v2/gh/jupyter/docker-stacks/main?urlpath=lab/tree/README.ipynb)
 by simply clicking the preceding link.
-Otherwise, the examples below may help you get started if you [have Docker installed](https://docs.docker.com/install/),
+Otherwise, the examples below may help you get started if you [have Docker installed](https://docs.docker.com/get-docker/),
 know [which Docker image](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html) you want to use
 and want to launch a single Jupyter Server in a container.
 
@@ -26,11 +26,11 @@ The [User Guide on ReadTheDocs](https://jupyter-docker-stacks.readthedocs.io/en/
 
 **Example 1:**
 
-This command pulls the `jupyter/scipy-notebook` image tagged `0fd03d9356de` from Docker Hub if it is not already present on the local host.
+This command pulls the `jupyter/scipy-notebook` image tagged `9e63909e0317` from Docker Hub if it is not already present on the local host.
 It then starts a container running a Jupyter Server and exposes the container's internal port `8888` to port `10000` of the host machine:
 
 ```bash
-docker run -p 10000:8888 jupyter/scipy-notebook:0fd03d9356de
+docker run -p 10000:8888 jupyter/scipy-notebook:9e63909e0317
 ```
 
 You can modify the port on which the container's port is exposed by [changing the value of the `-p` option](https://docs.docker.com/engine/reference/run/#expose-incoming-ports) to `-p 8888:8888`.
@@ -45,11 +45,11 @@ The container remains intact for restart after the Jupyter Server exits.
 
 **Example 2:**
 
-This command pulls the `jupyter/datascience-notebook` image tagged `0fd03d9356de` from Docker Hub if it is not already present on the local host.
+This command pulls the `jupyter/datascience-notebook` image tagged `9e63909e0317` from Docker Hub if it is not already present on the local host.
 It then starts an _ephemeral_ container running a Jupyter Server and exposes the server on host port 10000.
 
 ```bash
-docker run -it --rm -p 10000:8888 -v "${PWD}":/home/jovyan/work jupyter/datascience-notebook:0fd03d9356de
+docker run -it --rm -p 10000:8888 -v "${PWD}":/home/jovyan/work jupyter/datascience-notebook:9e63909e0317
 ```
 
 The use of the `-v` flag in the command mounts the current working directory on the host (`${PWD}` in the example command) as `/home/jovyan/work` in the container.
@@ -115,6 +115,6 @@ This change is tracked in the issue [#1217](https://github.com/jupyter/docker-st
 
 ## CPU Architectures
 
-- We publish containers for both `amd64` (`x86_64`) and `aarch64` platforms, except for `tensorflow-notebook`, which only supports `amd64` for now
-- We do not create multi-platform images
-- Instead, all `arm64` images have _aarch64-_ tag prefix, for example `jupyter/base-notebook:aarch64-python-3.10.5`
+- We publish containers for both `x86_64` and `aarch64` platforms, except for `tensorflow-notebook`, which only supports `x86_64` for now
+- Single-platform images have either `aarch64` or `x86_64` tag prefixes, for example `jupyter/base-notebook:aarch64-python-3.10.5`
+- Starting from `2022-09-21`, we create multi-platform images
