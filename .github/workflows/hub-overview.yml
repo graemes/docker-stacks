@@ -1,4 +1,4 @@
-name: Update dockerhub overviews
+name: Update Docker Hub overviews
 
 env:
   OWNER: ${{ github.repository_owner }}
@@ -10,36 +10,49 @@ on:
     paths:
       - ".github/workflows/hub-overview.yml"
 
-      - "all-spark-notebook/README.md"
-      - "base-notebook/README.md"
-      - "datascience-notebook/README.md"
-      - "minimal-notebook/README.md"
-      - "pyspark-notebook/README.md"
-      - "r-notebook/README.md"
-      - "scipy-notebook/README.md"
-      - "tensorflow-notebook/README.md"
+      - "images/*/README.md"
 
 jobs:
   update-dockerhub-overview:
-    name: Update dockerhub overviews
+    name: Update Docker Hub overviews
     runs-on: ubuntu-latest
+    if: github.repository == 'jupyter/docker-stacks'
 
     steps:
-      # Currently, it's impossible to automatically update descriptions
-      # https://github.com/docker/hub-tool/issues/172
-      - name: Fail to show, that for now we need to manually update dockerhub overview page 💩
-        run: exit 1
-
       - name: Checkout Repo ⚡️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Push README to Dockerhub for base-notebook 🐳
-        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8 # dependabot updates to latest release
+      - name: Push README to Docker Hub 🐳
+        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8 # v1
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
-          destination_container_repo: ${{ env.OWNER }}/base-notebook
+          destination_container_repo: ${{ env.OWNER }}/${{ matrix.image }}
           provider: dockerhub
-          short_description: "Small base image for Jupyter Notebook stacks from https://github.com/jupyter/docker-stacks"
-          readme_file: base-notebook/README.md
+          short_description: ${{ matrix.description }}
+          readme_file: images/${{ matrix.image }}/README.md
+
+    strategy:
+      matrix:
+        include:
+          - image: docker-stacks-foundation
+            description: "Tiny base image on which Jupyter apps can be built from https://github.com/jupyter/docker-stacks"
+          - image: base-notebook
+            description: "Base image for Jupyter Notebook stacks from https://github.com/jupyter/docker-stacks"
+          - image: minimal-notebook
+            description: "Minimal Jupyter Notebook Python Stack from https://github.com/jupyter/docker-stacks"
+          - image: scipy-notebook
+            description: "Scientific Jupyter Notebook Python Stack from https://github.com/jupyter/docker-stacks"
+          - image: r-notebook
+            description: "R Jupyter Notebook Stack from https://github.com/jupyter/docker-stacks"
+          - image: julia-notebook
+            description: "Julia Jupyter Notebook Stack from https://github.com/jupyter/docker-stacks"
+          - image: tensorflow-notebook
+            description: "Scientific Jupyter Notebook Python Stack w/ TensorFlow from https://github.com/jupyter/docker-stacks"
+          - image: datascience-notebook
+            description: "Data Science Jupyter Notebook Python Stack from https://github.com/jupyter/docker-stacks"
+          - image: pyspark-notebook
+            description: "Python and Spark Jupyter Notebook Stack from https://github.com/jupyter/docker-stacks"
+          - image: all-spark-notebook
+            description: "Python, Scala, R and Spark Jupyter Notebook Stack from https://github.com/jupyter/docker-stacks"

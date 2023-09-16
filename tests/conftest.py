@@ -24,6 +24,12 @@ def find_free_port() -> str:
         return s.getsockname()[1]  # type: ignore
 
 
+def get_health(container: Container) -> str:
+    api_client = docker.APIClient()
+    inspect_results = api_client.inspect_container(container.name)
+    return inspect_results["State"]["Health"]["Status"]  # type: ignore
+
+
 @pytest.fixture(scope="session")
 def http_client() -> requests.Session:
     """Requests session with retries and backoff."""
@@ -102,6 +108,7 @@ class TrackedContainer:
         timeout: int,
         no_warnings: bool = True,
         no_errors: bool = True,
+        no_failure: bool = True,
         **kwargs: Any,
     ) -> str:
         running_container = self.run_detached(**kwargs)
@@ -113,7 +120,7 @@ class TrackedContainer:
             assert not self.get_warnings(logs)
         if no_errors:
             assert not self.get_errors(logs)
-        assert rv == 0 or rv["StatusCode"] == 0
+        assert no_failure == (rv["StatusCode"] == 0)
         return logs
 
     @staticmethod

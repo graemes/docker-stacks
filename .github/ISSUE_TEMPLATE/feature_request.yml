@@ -1,6 +1,5 @@
 name: Feature request
 description: Suggest a new feature for this project
-title: "[ENH] - <title>"
 labels: ["type:Enhancement"]
 
 body:
@@ -13,7 +12,6 @@ body:
         section in the documentation for our preferred processes before submitting a feature request.
 
   - type: dropdown
-    id: docker_images
     attributes:
       label: What docker image(s) is this feature applicable to?
       description: Select as many images as applicable
@@ -22,6 +20,8 @@ body:
         - all-spark-notebook
         - base-notebook
         - datascience-notebook
+        - docker-stacks-foundation
+        - julia-notebook
         - minimal-notebook
         - pyspark-notebook
         - r-notebook
@@ -33,7 +33,7 @@ body:
 
   - type: textarea
     attributes:
-      label: What changes are you proposing?
+      label: What change(s) are you proposing?
       description: |
         Be concise and feel free to add supporting links or references.
       placeholder: |

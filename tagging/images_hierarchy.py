@@ -38,7 +38,7 @@ class ImageDescription:
 
 
 ALL_IMAGES = {
-    "base-notebook": ImageDescription(
+    "docker-stacks-foundation": ImageDescription(
         parent_image=None,
         taggers=[
             SHATagger(),
@@ -46,11 +46,16 @@ ALL_IMAGES = {
             UbuntuVersionTagger(),
             PythonMajorMinorVersionTagger(),
             PythonVersionTagger(),
+        ],
+        manifests=[CondaEnvironmentManifest(), AptPackagesManifest()],
+    ),
+    "base-notebook": ImageDescription(
+        parent_image="docker-stacks-foundation",
+        taggers=[
             JupyterNotebookVersionTagger(),
             JupyterLabVersionTagger(),
             JupyterHubVersionTagger(),
         ],
-        manifests=[CondaEnvironmentManifest(), AptPackagesManifest()],
     ),
     "minimal-notebook": ImageDescription(parent_image="base-notebook"),
     "scipy-notebook": ImageDescription(parent_image="minimal-notebook"),
@@ -58,6 +63,11 @@ ALL_IMAGES = {
         parent_image="minimal-notebook",
         taggers=[RVersionTagger()],
         manifests=[RPackagesManifest()],
+    ),
+    "julia-notebook": ImageDescription(
+        parent_image="minimal-notebook",
+        taggers=[JuliaVersionTagger()],
+        manifests=[JuliaPackagesManifest()],
     ),
     "tensorflow-notebook": ImageDescription(
         parent_image="scipy-notebook", taggers=[TensorflowVersionTagger()]

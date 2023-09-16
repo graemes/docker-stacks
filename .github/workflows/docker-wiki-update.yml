@@ -1,4 +1,4 @@
-name: Download manifest artifacts from GitHub, tag and push to DockerHub
+name: Download build manifests from GitHub artifacts and push them to GitHub wiki
 # We're doing everything in one workflow on purpose
 # This way we make sure we don't access wiki pages from several jobs simultaneously
 
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repo ⚡️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Create dev environment 📦
         uses: ./.github/actions/create-dev-env
         with:
@@ -20,27 +20,27 @@ jobs:
       - name: Download all manifests and history lines 📥
         uses: ./.github/actions/download-manifests
         with:
-          histLineDir: /tmp/hist_lines/
-          manifestDir: /tmp/manifests/
+          histLineDir: /tmp/jupyter/hist_lines/
+          manifestDir: /tmp/jupyter/manifests/
       - name: Display structure of downloaded files 🔍️
         run: |
-          ls -R /tmp/hist_lines/
-          ls -R /tmp/manifests/
+          ls -R /tmp/jupyter/hist_lines/
+          ls -R /tmp/jupyter/manifests/
         shell: bash
 
       - name: Checkout Wiki Repo 📃
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           path: wiki/
 
       - name: Update wiki page 🏷
-        run: python3 -m tagging.update_wiki_page --wiki-dir wiki/ --hist-line-dir /tmp/hist_lines/ --manifest-dir /tmp/manifests/
+        run: python3 -m tagging.update_wiki_page --wiki-dir wiki/ --hist-line-dir /tmp/jupyter/hist_lines/ --manifest-dir /tmp/jupyter/manifests/
         shell: bash
 
       - name: Push Wiki to GitHub 📤
-        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        uses: stefanzweifel/git-auto-commit-action@6c32682a4040e023c054b2fc60a7cf65cc77f7ad # dependabot updates to latest release
+        if: github.repository == 'jupyter/docker-stacks' && (github.ref == 'refs/heads/main' || github.event_name == 'schedule')
+        uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a # v4.16.0
         with:
           commit_message: "Automated wiki publish for ${{ github.sha }}"
           repository: wiki/

@@ -52,6 +52,7 @@ LOGGER = logging.getLogger(__name__)
 PACKAGE_MAPPING = {
     # Python
     "beautifulsoup4": "bs4",
+    "jupyter-pluto-proxy": "jupyter_pluto_proxy",
     "matplotlib-base": "matplotlib",
     "pytables": "tables",
     "scikit-image": "skimage",
@@ -69,11 +70,12 @@ EXCLUDED_PACKAGES = [
     "ca-certificates",
     "conda-forge::blas[build=openblas]",
     "hdf5",
+    "jupyterlab-git",
     "openssl",
+    "pandas[version='>",
     "protobuf",
     "python",
     "r-irkernel",
-    "r-sparklyr",  # TODO(asalikhov): remove this line when updated to spark 3.3
     "unixodbc",
 ]
 
