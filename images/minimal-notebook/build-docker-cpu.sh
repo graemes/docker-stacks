@@ -4,7 +4,7 @@ source ./build-params
 
 docker pull ${BASE_CONTAINER}
 
-iecho "Base container: ${BASE_CONTAINER}"
+echo "Base container: ${BASE_CONTAINER}"
 echo "Base Output: ${BASE_OUTPUT}"
 echo "Base Output - cloud: ${BASE_OUTPUT_CLOUD}"
 

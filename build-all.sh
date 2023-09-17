@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NOTEBOOKS="docker-stacks-foundation base-notebook minimal-notebook scipy-notebook datascience-notebook tensorflow-notebook r-notebook pyspark-notebook all-notebook all-spark-notebook"
+NOTEBOOKS="docker-stacks-foundation base-notebook minimal-notebook scipy-notebook r-notebook julia-notebook datascience-notebook tensorflow-notebook pyspark-notebook all-spark-notebook"
 
 function build-all-cpu() {
   for NOTEBOOK in ${NOTEBOOKS}
@@ -22,7 +22,8 @@ function build-all-gpu() {
   done
 }
 
-build-all-cpu &
-build-all-gpu &
+# build-all-cpu &
+# build-all-gpu &
+build-all-cpu
 wait
-docker-clean-unused.sh
+#docker-clean-unused.sh
