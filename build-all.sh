@@ -25,5 +25,8 @@ function build-all-gpu() {
 # build-all-cpu &
 # build-all-gpu &
 build-all-cpu
+#build-all-gpu
 wait
-#docker-clean-unused.sh
+
+#docker buildx prune -af
+docker-clean-unused.sh
