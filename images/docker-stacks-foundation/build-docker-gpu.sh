@@ -12,7 +12,7 @@ docker build . \
 	--squash \
 	-t ${GPU_OUTPUT} \
 	-t ${GPU_OUTPUT_CLOUD} \
-	--build-arg BASE_CONTAINER=${GPU_CONTAINER}
+	--build-arg ROOT_CONTAINER=${GPU_CONTAINER}
 
 docker push ${GPU_OUTPUT}
 #docker push ${GPU_OUTPUT_CLOUD}
