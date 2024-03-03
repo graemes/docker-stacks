@@ -26,6 +26,7 @@ body:
         - julia-notebook
         - minimal-notebook
         - pyspark-notebook
+        - pytorch-notebook
         - r-notebook
         - scipy-notebook
         - tensorflow-notebook
@@ -57,7 +58,7 @@ body:
         What complete docker command do you run to launch the container (omitting sensitive values)?
       placeholder: |
         Example:
-        `docker run -it --rm -p 8888:8888 jupyter/base-notebook`
+        `docker run -it --rm -p 8888:8888 quay.io/jupyter/base-notebook`
     validations:
       required: true
 
@@ -124,5 +125,5 @@ body:
       label: Latest Docker version
       description: You should try to use the latest Docker version
       options:
-        - label: I've updated my Docker version to the latest available, and the issue still persists
+        - label: I've updated my Docker version to the latest available, and the issue persists
           required: true

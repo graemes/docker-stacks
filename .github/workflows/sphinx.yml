@@ -2,7 +2,7 @@ name: Build Sphinx Documentation and check links
 
 on:
   schedule:
-    # Weekly, at 03:00 on Monday UTC time
+    # Weekly, at 03:00 on Monday UTC
     - cron: "0 3 * * 1"
   pull_request:
     paths:
@@ -10,7 +10,6 @@ on:
 
       - "docs/**"
       - "README.md"
-      - ".readthedocs.yaml"
   push:
     branches:
       - main
@@ -19,15 +18,13 @@ on:
 
       - "docs/**"
       - "README.md"
-      - ".readthedocs.yaml"
   workflow_dispatch:
 
 jobs:
   build-docs:
-    name: Build Sphinx Documentation
     permissions:
       contents: write
-    if: github.repository == 'jupyter/docker-stacks' || github.event_name != 'schedule'
+    if: github.repository_owner == 'jupyter' || github.repository_owner == 'mathbunnyru' || github.event_name != 'schedule'
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +34,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Up Python 🐍
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.9
 

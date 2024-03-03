@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook
+FROM quay.io/jupyter/base-notebook
 
 USER root
 
@@ -15,7 +15,7 @@ ARG INSTANTCLIENT_MAJOR_VERSION=21
 ARG INSTANTCLIENT_VERSION=${INSTANTCLIENT_MAJOR_VERSION}.11.0.0.0-1
 ARG INSTANTCLIENT_URL=https://download.oracle.com/otn_software/linux/instantclient/2111000
 
-# Then install Oracle SQL Instant client, SQL+Plus, tools and JDBC.
+# Then install Oracle SQL Instant client, SQL+Plus, tools, and JDBC.
 # Note: You may need to change the URL to a newer version.
 # See: https://www.oracle.com/es/database/technologies/instant-client/linux-x86-64-downloads.html
 RUN mkdir "/opt/oracle"
@@ -33,13 +33,13 @@ RUN wget --progress=dot:giga "${INSTANTCLIENT_URL}/oracle-instantclient-basiclit
 
 # And configure variables
 RUN echo "ORACLE_HOME=/usr/lib/oracle/${INSTANTCLIENT_MAJOR_VERSION}/client64" >> "${HOME}/.bashrc" && \
-    echo "PATH=${ORACLE_HOME}/bin:$PATH" >> "${HOME}/.bashrc" && \
+    echo "PATH=${ORACLE_HOME}/bin:${PATH}" >> "${HOME}/.bashrc" && \
     echo "LD_LIBRARY_PATH=${ORACLE_HOME}/lib:${LD_LIBRARY_PATH}" >> "${HOME}/.bashrc" && \
     echo "export ORACLE_HOME" >> "${HOME}/.bashrc" && \
     echo "export PATH" >> "${HOME}/.bashrc" && \
     echo "export LD_LIBRARY_PATH" >> "${HOME}/.bashrc"
 
-# Add credentials for /redacted/ using Oracle Db.
+# Add credentials for /redacted/ using Oracle DB.
 WORKDIR /usr/lib/oracle/${INSTANTCLIENT_MAJOR_VERSION}/client64/lib/network/admin/
 # Add a wildcard `[]` on the last letter of the filename to avoid throwing an error if the file does not exist.
 # See: https://stackoverflow.com/questions/31528384/conditional-copy-add-in-dockerfile

@@ -13,7 +13,6 @@ from tagging.manifests import (
 )
 from tagging.taggers import (
     DateTagger,
-    HadoopVersionTagger,
     JavaVersionTagger,
     JuliaVersionTagger,
     JupyterHubVersionTagger,
@@ -21,6 +20,7 @@ from tagging.taggers import (
     JupyterNotebookVersionTagger,
     PythonMajorMinorVersionTagger,
     PythonVersionTagger,
+    PytorchVersionTagger,
     RVersionTagger,
     SHATagger,
     SparkVersionTagger,
@@ -72,6 +72,9 @@ ALL_IMAGES = {
     "tensorflow-notebook": ImageDescription(
         parent_image="scipy-notebook", taggers=[TensorflowVersionTagger()]
     ),
+    "pytorch-notebook": ImageDescription(
+        parent_image="scipy-notebook", taggers=[PytorchVersionTagger()]
+    ),
     "datascience-notebook": ImageDescription(
         parent_image="scipy-notebook",
         taggers=[RVersionTagger(), JuliaVersionTagger()],
@@ -79,7 +82,7 @@ ALL_IMAGES = {
     ),
     "pyspark-notebook": ImageDescription(
         parent_image="scipy-notebook",
-        taggers=[SparkVersionTagger(), HadoopVersionTagger(), JavaVersionTagger()],
+        taggers=[SparkVersionTagger(), JavaVersionTagger()],
         manifests=[SparkInfoManifest()],
     ),
     "all-spark-notebook": ImageDescription(
