@@ -16,13 +16,14 @@ This section provides details about the first.
 The Jupyter team maintains a set of Docker image definitions in the <https://github.com/jupyter/docker-stacks> GitHub repository.
 The following sections describe these images, including their contents, relationships, and versioning strategy.
 
-## CUDA enabled variant
+### CUDA enabled variant
 
-We provide CUDA accelerated version of `pytorch-notebook` image.
-Prepend a CUDA version prefix (like `cuda12-`) to the image tag to allow PyTorch operations to use compatible NVIDIA GPUs for accelerated computation.
-We only build images for 2 last major versions of CUDA.
+We provide CUDA accelerated version of `pytorch-notebook` and `tensorflow-notebook` images.
+Prepend a CUDA prefix (versioned prefix like `cuda12-` for `pytorch-notebook` or just `cuda-` for `tensorflow-notebook`) to the image tag
+to allow PyTorch or TensorFlow operations to use compatible NVIDIA GPUs for accelerated computation.
+Note: We only build `pytorch-notebook` for 2 last major versions of CUDA, `tensorflow-notebook` image only supports the latest CUDA version listed in the [officially tested build configurations](https://www.tensorflow.org/install/source#gpu).
 
-For example, you can use an image `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8`
+For example, you can use an image `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8` or `quay.io/jupyter/tensorflow-notebook:cuda-latest`
 
 ### jupyter/docker-stacks-foundation
 
@@ -242,7 +243,7 @@ It contains:
 - Everything in `jupyter/pyspark-notebook` and its ancestor images
 - [IRKernel](https://irkernel.github.io/) to support R code in Jupyter notebooks
 - [rcurl](https://cran.r-project.org/web/packages/RCurl/index.html),
-  [sparklyr](https://spark.rstudio.com),
+  [sparklyr](https://spark.posit.co),
   [ggplot2](https://ggplot2.tidyverse.org)
   packages
 
@@ -327,13 +328,16 @@ See the [contributing guide](../contributing/stacks.md) for information about ho
 
 ### Other GPU-accelerated notebooks
 
-| Flavor             | Description                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [GPU-Jupyter][gpu] | Power of your NVIDIA GPU and GPU calculations using Tensorflow and Pytorch in collaborative notebooks. This is done by generating a Dockerfile that consists of the **nvidia/cuda** base image, the well-maintained **docker-stacks** that is integrated as a submodule, and GPU-able libraries like **Tensorflow**, **Keras** and **PyTorch** on top of it. |
-| [PRP-GPU][prp_gpu] | PRP (Pacific Research Platform) maintained [registry][prp_reg] for jupyter stack based on NVIDIA CUDA-enabled image. Added the PRP image with Pytorch and some other Python packages and GUI Desktop notebook based on <https://github.com/jupyterhub/jupyter-remote-desktop-proxy>.                                                                         |
-| [b-data][b-data]   | GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images for [R][r_cuda], [Python][python_cuda] and [Julia][julia_cuda]. Derived from nvidia/cuda `devel`-flavored images, including TensortRT and TensorRT plugin libraries. With [code-server][code-server] next to JupyterLab. Just Python – no [Conda][conda]/[Mamba][mamba].         |
+| Flavor                            | Description                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [GPU-Jupyter][gpu]                | Power of your NVIDIA GPU and GPU calculations using Tensorflow and Pytorch in collaborative notebooks. This is done by generating a Dockerfile that consists of the **nvidia/cuda** base image, the well-maintained **docker-stacks** that is integrated as a submodule, and GPU-able libraries like **Tensorflow**, **Keras** and **PyTorch** on top of it. |
+| [myLab TH Lübeck Images][gpu_thl] | Images based on the **jupyter/docker-stacks**, built and maintained at the [myLab TH Lübeck][gpu_mylab] using build scripts similar to iot-salzburg. Several images include GPU libraries.                                                                                                                                                                   |
+| [PRP-GPU][prp_gpu]                | PRP (Pacific Research Platform) maintained [registry][prp_reg] for jupyter stack based on NVIDIA CUDA-enabled image. Added the PRP image with Pytorch and some other Python packages and GUI Desktop notebook based on <https://github.com/jupyterhub/jupyter-remote-desktop-proxy>.                                                                         |
+| [b-data][b-data]                  | GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images for [R][r_cuda], [Python][python_cuda] and [Julia][julia_cuda]. Derived from nvidia/cuda `devel`-flavored images, including TensortRT and TensorRT plugin libraries. With [code-server][code-server] next to JupyterLab. Just Python – no [Conda][conda]/[Mamba][mamba].         |
 
 [gpu]: https://github.com/iot-salzburg/gpu-jupyter
+[gpu_thl]: https://hub.docker.com/r/hanseware/jlab-images
+[gpu_mylab]: https://mylab.th-luebeck.de
 [prp_gpu]: https://gitlab.nrp-nautilus.io/prp/jupyter-stack/-/tree/prp
 [prp_reg]: https://gitlab.nrp-nautilus.io/prp/jupyter-stack/container_registry
 [b-data]: https://github.com/b-data
