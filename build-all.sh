@@ -26,8 +26,8 @@ function build-all-gpu() {
 # build-all-gpu &
 wait
 
-#build-all-cpu
-#docker-clean-unused.sh
+build-all-cpu
+docker-clean-unused.sh
 build-all-gpu
 docker-clean-unused.sh
 

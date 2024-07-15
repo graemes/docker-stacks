@@ -1,2 +1,4 @@
-BASE_REGISTRY="registry.graemes.cloud/graemes"
-BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
+# BASE_REGISTRY="registry.graemes.cloud/graemes"
+# BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
+BASE_REGISTRY="registry.graemes.cloud/jupyter/stacks"
+BASE_REGISTRY_CLOUD="registry.graemes.cloud/jupyter/stacks"
