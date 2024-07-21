@@ -15,5 +15,5 @@ docker build . \
 	--build-arg BASE_CONTAINER=${BASE_CONTAINER}
 
 docker push ${BASE_OUTPUT}
-#docker push ${BASE_OUTPUT_CLOUD}
+docker push ${BASE_OUTPUT_CLOUD}
 

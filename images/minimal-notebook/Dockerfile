@@ -43,15 +43,15 @@ RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
 
-RUN jupyter labextension install @jupyterlab/toc && \
-    conda install -c conda-forge jupyterlab jupyterlab-git && \
-    jupyter lab build && \
-    conda clean --all -f -y && \
-    npm cache clean --force && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+# RUN jupyter labextension install @jupyterlab/toc && \
+#     conda install -c conda-forge jupyterlab jupyterlab-git && \
+#     jupyter lab build && \
+#     conda clean --all -f -y && \
+#     npm cache clean --force && \
+#     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#     rm -rf /home/$NB_USER/.cache/yarn && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
 
 # Add R mimetype option to specify how the plot returns from R to the browser
 COPY --chown=${NB_UID}:${NB_GID} Rprofile.site /opt/conda/lib/R/etc/
