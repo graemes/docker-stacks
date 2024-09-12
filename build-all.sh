@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NOTEBOOKS="docker-stacks-foundation base-notebook minimal-notebook scipy-notebook r-notebook julia-notebook datascience-notebook tensorflow-notebook pyspark-notebook all-spark-notebook"
+NOTEBOOKS="docker-stacks-foundation base-notebook minimal-notebook scipy-notebook pytorch-notebook r-notebook julia-notebook datascience-notebook tensorflow-notebook pyspark-notebook all-spark-notebook"
 
 function build-all-cpu() {
   for NOTEBOOK in ${NOTEBOOKS}
