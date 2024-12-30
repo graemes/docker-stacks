@@ -7,17 +7,17 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends software-properties-common && \
     add-apt-repository universe && \
     apt-get update --yes && \
-    apt-get install --yes --no-install-recommends alien default-jre default-jdk openjdk-11-jdk libaio1 && \
+    apt-get install --yes --no-install-recommends alien default-jre default-jdk openjdk-11-jdk libaio1t64 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Oracle
 ARG INSTANTCLIENT_MAJOR_VERSION=23
-ARG INSTANTCLIENT_BIN_SUFFIX=${INSTANTCLIENT_MAJOR_VERSION}.4.0.24.05-1.el9.x86_64.rpm
-ARG INSTANTCLIENT_URL=https://download.oracle.com/otn_software/linux/instantclient/2340000
+ARG INSTANTCLIENT_BIN_SUFFIX=${INSTANTCLIENT_MAJOR_VERSION}.6.0.24.10-1.el9.x86_64.rpm
+ARG INSTANTCLIENT_URL=https://download.oracle.com/otn_software/linux/instantclient/2360000
 
 # Then install Oracle SQL Instant client, SQL+Plus, tools, and JDBC.
 # Note: You may need to change the URL to a newer version.
-# See: https://www.oracle.com/es/database/technologies/instant-client/linux-x86-64-downloads.html
+# See: https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html
 RUN mkdir "/opt/oracle"
 WORKDIR "/opt/oracle"
 # alien doesn't work well with sqlplus, so skipping it for now
@@ -34,8 +34,8 @@ RUN wget --progress=dot:giga "${INSTANTCLIENT_URL}/oracle-instantclient-basiclit
 
 # And configure variables
 RUN echo "ORACLE_HOME=/usr/lib/oracle/${INSTANTCLIENT_MAJOR_VERSION}/client64" >> "${HOME}/.bashrc" && \
-    echo "PATH=${ORACLE_HOME}/bin:${PATH}" >> "${HOME}/.bashrc" && \
-    echo "LD_LIBRARY_PATH=${ORACLE_HOME}/lib:${LD_LIBRARY_PATH}" >> "${HOME}/.bashrc" && \
+    echo "PATH=\"${ORACLE_HOME}/bin:${PATH}\"" >> "${HOME}/.bashrc" && \
+    echo "LD_LIBRARY_PATH=\"${ORACLE_HOME}/lib:${LD_LIBRARY_PATH}\"" >> "${HOME}/.bashrc" && \
     echo "export ORACLE_HOME" >> "${HOME}/.bashrc" && \
     echo "export PATH" >> "${HOME}/.bashrc" && \
     echo "export LD_LIBRARY_PATH" >> "${HOME}/.bashrc"

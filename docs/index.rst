@@ -13,8 +13,10 @@ Table of Contents
    using/common
    using/specifics
    using/recipes
+   using/custom-images
    using/troubleshooting
    using/faq
+   using/changelog
 
 .. toctree::
    :maxdepth: 2

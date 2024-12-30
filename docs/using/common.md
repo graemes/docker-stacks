@@ -62,8 +62,8 @@ You do so by passing arguments to the `docker run` command.
   This feature is useful when mounting host volumes with specific owner permissions.
   You **must** run the container with `--user root` for this option to take effect.
   (The startup script will `su ${NB_USER}` after adjusting the user ID.)
-  Instead, you might consider using the modern Docker-native options [`--user`](https://docs.docker.com/engine/reference/run/#user) and
-  [`--group-add`](https://docs.docker.com/engine/reference/run/#additional-groups) - see the last bullet in this section for more details.
+  Instead, you might consider using the modern Docker-native options [`--user`](https://docs.docker.com/engine/containers/run/#user) and
+  [`--group-add`](https://docs.docker.com/engine/containers/run/#additional-groups) - see the last bullet in this section for more details.
   See bullet points regarding `--user` and `--group-add`.
 
 - `-e NB_GID=<numeric gid>` - Instructs the startup script to change the primary group of `${NB_USER}` to `${NB_GID}`
@@ -213,14 +213,20 @@ docker run -it --rm \
     -p 8888:8888 \
     -e DOCKER_STACKS_JUPYTER_CMD=notebook \
     quay.io/jupyter/base-notebook
-# Executing the command: jupyter notebook ...
+
+# Executing the command: start-notebook.py
+# Executing: jupyter notebook
+# ...
 
 # Use Jupyter NBClassic frontend
 docker run -it --rm \
     -p 8888:8888 \
     -e DOCKER_STACKS_JUPYTER_CMD=nbclassic \
     quay.io/jupyter/base-notebook
-# Executing the command: jupyter nbclassic ...
+
+# Executing the command: start-notebook.py
+# Executing: jupyter nbclassic
+# ...
 ```
 
 ### `start.sh`
@@ -238,7 +244,7 @@ This script is handy when you derive a new Dockerfile from this image and instal
 
 ## Conda Environments
 
-The default Python 3.x [Conda environment](https://conda.io/projects/conda/en/latest/user-guide/concepts/environments.html) resides in `/opt/conda`.
+The default Python 3.x [Conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html) resides in `/opt/conda`.
 The `/opt/conda/bin` directory is part of the default `jovyan` user's `${PATH}`.
 That directory is also searched for binaries when run using `sudo` (`sudo my_binary` will search for `my_binary` in `/opt/conda/bin/`
 

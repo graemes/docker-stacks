@@ -2,8 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 ARG REGISTRY=quay.io
 ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/docker-stacks-foundation
-FROM $BASE_CONTAINER
+ARG BASE_IMAGE=$REGISTRY/$OWNER/docker-stacks-foundation
+FROM $BASE_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -31,7 +31,7 @@ RUN apt-get update --yes && \
 
 USER ${NB_UID}
 
-# Install JupyterLab, Jupyter Notebook, JupyterHub and NBClassic
+# Install JupyterHub, JupyterLab, NBClassic and Jupyter Notebook
 # Generate a Jupyter Server config
 # Cleanup temporary files
 # Correct permissions
@@ -39,13 +39,16 @@ USER ${NB_UID}
 # files across image layers when the permissions change
 WORKDIR /tmp
 RUN mamba install --yes \
+    'jupyterhub-singleuser' \
     'jupyterlab' \
-    'notebook' \
-    'jupyterhub' \
-    'nbclassic' && \
+    'nbclassic' \
+    # Sometimes, when the new version of `jupyterlab` is released, latest `notebook` might not support it for some time
+    # Old versions of `notebook` (<v7) didn't have a restriction on the `jupyterlab` version, and old `notebook` is getting installed
+    # That's why we have to pin the minimum notebook version
+    # More info: https://github.com/jupyter/docker-stacks/pull/2167
+    'notebook>=7.2.2' && \
     jupyter server --generate-config && \
     mamba clean --all -f -y && \
-    npm cache clean --force && \
     jupyter lab clean && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     fix-permissions "${CONDA_DIR}" && \

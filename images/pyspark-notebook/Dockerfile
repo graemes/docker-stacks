@@ -2,8 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 ARG REGISTRY=quay.io
 ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/scipy-notebook
-FROM $BASE_CONTAINER
+ARG BASE_IMAGE=$REGISTRY/$OWNER/scipy-notebook
+FROM $BASE_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -24,7 +24,7 @@ RUN apt-get update --yes && \
     ca-certificates-java && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# If spark_version is not set, latest stable Spark will be installed
+# If spark_version is not set, latest Spark will be installed
 ARG spark_version
 ARG hadoop_version="3"
 # If scala_version is not set, Spark without Scala will be installed
@@ -63,7 +63,7 @@ USER ${NB_UID}
 RUN mamba install --yes \
     'grpcio-status' \
     'grpcio' \
-    'pandas=2.0.3' \
+    'pandas=2.2.2' \
     'pyarrow' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \

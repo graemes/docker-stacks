@@ -4,6 +4,9 @@ Users sometimes share interesting ways of using the Jupyter Docker Stacks.
 We encourage users to [contribute these recipes](../contributing/recipes.md) to the documentation in case they prove helpful to other community members by submitting a pull request to `docs/using/recipes.md`.
 The sections below capture this knowledge.
 
+All the recipes here assume you would like to use an image built by this project and install some things on top of it.
+If you would like to build a custom set of images, [take a look at the docs](custom-images.md).
+
 ## Using `sudo` within a container
 
 Password authentication is disabled for the `NB_USER` (e.g., `jovyan`).
@@ -148,7 +151,7 @@ Ref: <https://github.com/jupyter/docker-stacks/issues/199>
 
 ## Manpage installation
 
-Most containers, including our Ubuntu base image, ship without manpages installed to save space.
+Most images, including our Ubuntu base image, ship without manpages installed to save space.
 You can use the following Dockerfile to inherit from one of our images to enable manpages:
 
 ```{literalinclude} recipe_code/manpage_install.dockerfile
@@ -158,11 +161,11 @@ You can use the following Dockerfile to inherit from one of our images to enable
 Adding the documentation on top of the existing image wastes a lot of space
 and requires reinstalling every system package,
 which can take additional time and bandwidth.
-Enabling manpages in the base Ubuntu layer prevents this container bloat.
-To achieve this, use the previous `Dockerfile`'s commands with the original `ubuntu` image as your base container:
+Enabling manpages in the base Ubuntu layer prevents this image bloat.
+To achieve this, use the previous `Dockerfile`'s commands with the original `ubuntu` image as your base image:
 
 ```dockerfile
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ```
 
 Be sure to check the current base image in `jupyter/docker-stacks-foundation` before building.
@@ -301,10 +304,10 @@ This recipe is not tested and might be broken.
 FROM quay.io/jupyter/all-spark-notebook
 
 # Set env vars for pydoop
-ENV HADOOP_HOME /usr/local/hadoop-2.7.3
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-ENV HADOOP_CONF_HOME /usr/local/hadoop-2.7.3/etc/hadoop
-ENV HADOOP_CONF_DIR /usr/local/hadoop-2.7.3/etc/hadoop
+ENV HADOOP_HOME=/usr/local/hadoop-2.7.3
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ENV HADOOP_CONF_HOME=/usr/local/hadoop-2.7.3/etc/hadoop
+ENV HADOOP_CONF_DIR=/usr/local/hadoop-2.7.3/etc/hadoop
 
 USER root
 # Add proper open-jdk-8 not the jre only, needed for pydoop
@@ -480,20 +483,12 @@ docker run -it --rm \
     quay.io/jupyter/minimal-notebook
 ```
 
-## Add ijavascript kernel to container
+## Install ijavascript kernel in your image
 
-```{warning}
-This recipe is not tested and might be broken.
-```
+The example below is a Dockerfile to install the [IJavascript kernel](https://github.com/n-riesco/ijavascript).
 
-The example below is a Dockerfile to install the [ijavascript kernel](https://github.com/n-riesco/ijavascript).
-
-```dockerfile
-FROM quay.io/jupyter/scipy-notebook
-
-# install ijavascript
-RUN npm install -g ijavascript
-RUN ijsinstall
+```{literalinclude} recipe_code/ijavascript.dockerfile
+:language: docker
 ```
 
 ## Add Microsoft SQL Server ODBC driver

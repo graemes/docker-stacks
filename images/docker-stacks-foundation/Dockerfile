@@ -1,11 +1,11 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 22.04 (jammy)
-# https://hub.docker.com/_/ubuntu/tags?page=1&name=jammy
-ARG ROOT_CONTAINER=ubuntu:22.04
+# Ubuntu 24.04 (noble)
+# https://hub.docker.com/_/ubuntu/tags?page=1&name=noble
+ARG ROOT_IMAGE=ubuntu:24.04
 
-FROM $ROOT_CONTAINER
+FROM $ROOT_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 ARG NB_USER="jovyan"
@@ -30,6 +30,10 @@ RUN apt-get update --yes && \
     bzip2 \
     ca-certificates \
     locales \
+    # - `netbase` provides /etc/{protocols,rpc,services}, part of POSIX
+    #   and required by various C functions like getservbyname and getprotobyname
+    #   https://github.com/jupyter/docker-stacks/pull/2129
+    netbase \
     sudo \
     # - `tini` is installed as a helpful container entrypoint,
     #   that reaps zombie processes and such of the actual executable we want to start
@@ -64,7 +68,13 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
     # and docs: https://docs.conda.io/projects/conda/en/latest/dev-guide/deep-dives/activation.html
     echo 'eval "$(conda shell.bash hook)"' >> /etc/skel/.bashrc
 
-# Create NB_USER with name jovyan user with UID=1000 and in the 'users' group
+# Delete existing user with UID="${NB_UID}" if it exists
+# hadolint ignore=SC2046
+RUN if grep -q "${NB_UID}" /etc/passwd; then \
+        userdel --remove $(id -un "${NB_UID}"); \
+    fi
+
+# Create "${NB_USER}" user (`jovyan` by default) with UID="${NB_UID}" (`1000` by default) and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
@@ -79,7 +89,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 USER ${NB_UID}
 
 # Pin the Python version here, or set it to "default"
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.12
 
 # Setup work directory for backward-compatibility
 RUN mkdir "/home/${NB_USER}/work" && \
@@ -113,13 +123,14 @@ RUN set -x && \
         --root-prefix="${CONDA_DIR}" \
         --prefix="${CONDA_DIR}" \
         --yes \
-        "${PYTHON_SPECIFIER}" \
+        'jupyter_core' \
+        'conda' \
         'mamba' \
-        'jupyter_core' && \
+        "${PYTHON_SPECIFIER}" && \
     rm -rf /tmp/bin/ && \
     # Pin major.minor version of python
     # https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-pkgs.html#preventing-packages-from-updating-pinning
-    mamba list --full-name 'python' | tail -1 | tr -s ' ' | cut -d ' ' -f 1,2 | sed 's/\.[^.]*$/.*/' >> "${CONDA_DIR}/conda-meta/pinned" && \
+    mamba list --full-name 'python' | awk 'END{sub("[^.]*$", "*", $2); print $1 " " $2}' >> "${CONDA_DIR}/conda-meta/pinned" && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"

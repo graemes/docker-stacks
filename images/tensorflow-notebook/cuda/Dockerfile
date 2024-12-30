@@ -2,8 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 ARG REGISTRY=quay.io
 ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/scipy-notebook
-FROM $BASE_CONTAINER
+ARG BASE_IMAGE=$REGISTRY/$OWNER/scipy-notebook
+FROM $BASE_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -12,9 +12,13 @@ LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install TensorFlow, CUDA and cuDNN with pip
-RUN pip install --no-cache-dir "tensorflow[and-cuda]" && \
+RUN pip install --no-cache-dir \
+    "jupyter-server-proxy" \
+    "tensorflow[and-cuda]<=2.17.1" && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
+COPY --chown="${NB_UID}:${NB_GID}" 20tensorboard-proxy-env.sh /usr/local/bin/before-notebook.d/
 
 # workaround for https://github.com/tensorflow/tensorflow/issues/63362
 RUN mkdir -p "${CONDA_DIR}/etc/conda/activate.d/" && \
@@ -28,5 +32,5 @@ ENV NVIDIA_VISIBLE_DEVICES="all" \
 
 # Puts the nvidia-smi binary (system management interface) on path
 # with associated library files to execute it
-ENV PATH=${PATH}:/usr/local/nvidia/bin
-ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/nvidia/lib64
+ENV PATH="${PATH}:/usr/local/nvidia/bin" \
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/nvidia/lib64"

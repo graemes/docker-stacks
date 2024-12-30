@@ -16,15 +16,6 @@ This section provides details about the first.
 The Jupyter team maintains a set of Docker image definitions in the <https://github.com/jupyter/docker-stacks> GitHub repository.
 The following sections describe these images, including their contents, relationships, and versioning strategy.
 
-### CUDA enabled variant
-
-We provide CUDA accelerated version of `pytorch-notebook` and `tensorflow-notebook` images.
-Prepend a CUDA prefix (versioned prefix like `cuda12-` for `pytorch-notebook` or just `cuda-` for `tensorflow-notebook`) to the image tag
-to allow PyTorch or TensorFlow operations to use compatible NVIDIA GPUs for accelerated computation.
-Note: We only build `pytorch-notebook` for 2 last major versions of CUDA, `tensorflow-notebook` image only supports the latest CUDA version listed in the [officially tested build configurations](https://www.tensorflow.org/install/source#gpu).
-
-For example, you can use an image `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8` or `quay.io/jupyter/tensorflow-notebook:cuda-latest`
-
 ### jupyter/docker-stacks-foundation
 
 [Source on GitHub](https://github.com/jupyter/docker-stacks/tree/main/images/docker-stacks-foundation) |
@@ -63,7 +54,7 @@ It contains:
 
 - Everything in `jupyter/docker-stacks-foundation`
 - Minimally functional Server (e.g., no LaTeX support for saving notebooks as PDFs)
-- `notebook`, `jupyterhub`, and `jupyterlab` packages
+- `notebook`, `jupyterhub-singleuser`, and `jupyterlab` packages
 - A `start-notebook.py` script as the default command
 - A `start-singleuser.py` script useful for launching containers in JupyterHub
 - Options for a self-signed HTTPS certificate
@@ -193,7 +184,8 @@ It contains:
 `jupyter/tensorflow-notebook` includes popular Python deep learning libraries.
 
 - Everything in `jupyter/scipy-notebook` and its ancestor images
-- [tensorflow](https://www.tensorflow.org/) machine learning library
+- [TensorFlow](https://www.tensorflow.org/) machine learning library
+- [Jupyter Server Proxy](https://jupyter-server-proxy.readthedocs.io/en/latest/) to support [TensorBoard](https://www.tensorflow.org/tensorboard)
 
 ### jupyter/pytorch-notebook
 
@@ -247,13 +239,23 @@ It contains:
   [ggplot2](https://ggplot2.tidyverse.org)
   packages
 
+### CUDA enabled variants
+
+We provide CUDA accelerated versions of the `pytorch-notebook` and `tensorflow-notebook` images.
+Prepend a CUDA prefix (versioned prefix like `cuda12-` for `pytorch-notebook` or just `cuda-` for `tensorflow-notebook`) to the image tag
+to allow PyTorch or TensorFlow operations to use compatible NVIDIA GPUs for accelerated computation.
+We only build `pytorch-notebook` for last two major versions of CUDA.
+The `tensorflow-notebook` image only supports the latest CUDA version listed in the [officially tested build configurations](https://www.tensorflow.org/install/source#gpu).
+
+For example, you could use the image `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8` or `quay.io/jupyter/tensorflow-notebook:cuda-latest`.
+
 ### Image Relationships
 
 The following diagram depicts the build dependency tree of the core images. (i.e., the `FROM` statements in their Dockerfiles).
 Any given image inherits the complete content of all ancestor images pointing to it.
 
 [![Image inheritance
-diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFz8FOwzAMgOH7nsLqCQ55ADTBE3CDIxJyU5eZZnaUOJoK2rsv4YCUSlOvv784yRjULxPjF_weACaasQT7nFUs8w_BMzwda9fEJIbGKjVFTZaQ7Xioo6GMRax8yMPr-xtc2E51zmKQKBBmehzAvcBUb6HksqFfspu1yPS3rS2_N2vnxrrBiRqNqkvDXWjizMJnDB3atuay57h2qi_NDEaSNc1BL_99uEPjapr8ac_Vr2CtJJ52n5h2xXcJjDufiGuOmJZObVtzGILbyusNkda3zw)
+diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFj0FqwzAQRfc5hfAqpYiS7kpoT9BdugyEsTxuplZmjDRqcEvvXinQggzGK8Gb97_4rRc3dATv5ntjTIc9JK-nXlgjfaF5Nk_7zCUQsoKScEajBA1Aut_kU5PaxJqOvH19O5gr6TnfidUE9AgR7xpjX0yXf8Fgo4Ibou0lcXdrK-VLt5Jrc4NlUWxFhiJXoBgXYrqAr6Q5K150NE6VVZPiNIocJfRerv_8yPcudWA-IRCwNgvJcVIJ7jyP7XYPt-fxLx8XCvJkyBTZ4eqUsGp8JE-wMnac4ghhqKw5Kx54b-fmzy_M3cYh)
 
 ### Builds
 

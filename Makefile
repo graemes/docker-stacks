@@ -36,9 +36,9 @@ help:
 
 
 build/%: DOCKER_BUILD_ARGS?=
-build/%: ROOT_CONTAINER?=ubuntu:22.04
+build/%: ROOT_IMAGE?=ubuntu:24.04
 build/%: ## build the latest image for a stack using the system's architecture
-	docker build $(DOCKER_BUILD_ARGS) --rm --force-rm --tag "$(REGISTRY)/$(OWNER)/$(notdir $@):latest" "./images/$(notdir $@)" --build-arg REGISTRY="$(REGISTRY)" --build-arg OWNER="$(OWNER)"
+	docker build $(DOCKER_BUILD_ARGS) --rm --force-rm --tag "$(REGISTRY)/$(OWNER)/$(notdir $@):latest" "./images/$(notdir $@)" --build-arg REGISTRY="$(REGISTRY)" --build-arg OWNER="$(OWNER)" --build-arg ROOT_IMAGE="$(ROOT_IMAGE)"
 	@echo -n "Built image size: "
 	@docker images "$(REGISTRY)/$(OWNER)/$(notdir $@):latest" --format "{{.Size}}"
 build-all: $(foreach I, $(ALL_IMAGES), build/$(I)) ## build all stacks
@@ -72,7 +72,7 @@ hook/%: VARIANT?=default
 hook/%: ## run post-build hooks for an image
 	python3 -m tagging.write_tags_file --short-image-name "$(notdir $@)" --tags-dir /tmp/jupyter/tags/ --registry "$(REGISTRY)" --owner "$(OWNER)" --variant "$(VARIANT)" && \
 	python3 -m tagging.write_manifest --short-image-name "$(notdir $@)" --hist-lines-dir /tmp/jupyter/hist_lines/ --manifests-dir /tmp/jupyter/manifests/ --registry "$(REGISTRY)" --owner "$(OWNER)" --variant "$(VARIANT)" && \
-	python3 -m tagging.apply_tags --short-image-name "$(notdir $@)" --tags-dir /tmp/jupyter/tags/ --platform "$(shell uname -m)" --variant "$(VARIANT)" --registry "$(REGISTRY)" --owner "$(OWNER)"
+	python3 -m tagging.apply_tags --short-image-name "$(notdir $@)" --tags-dir /tmp/jupyter/tags/ --platform "$(shell uname -m)" --registry "$(REGISTRY)" --owner "$(OWNER)" --variant "$(VARIANT)"
 hook-all: $(foreach I, $(ALL_IMAGES), hook/$(I)) ## run post-build hooks for all images
 
 

@@ -2,8 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 ARG REGISTRY=quay.io
 ARG OWNER=jupyter
-ARG BASE_CONTAINER=$REGISTRY/$OWNER/pyspark-notebook
-FROM $BASE_CONTAINER
+ARG BASE_IMAGE=$REGISTRY/$OWNER/pyspark-notebook
+FROM $BASE_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -14,7 +14,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 USER root
 
 # RSpark config
-ENV R_LIBS_USER "${SPARK_HOME}/R/lib"
+ENV R_LIBS_USER="${SPARK_HOME}/R/lib"
 RUN fix-permissions "${R_LIBS_USER}"
 
 # R pre-requisites

@@ -57,7 +57,7 @@ jobs:
 
       - name: Login to Registry 🔐
         if: env.PUSH_TO_REGISTRY == 'true'
-        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: quay.io
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -69,7 +69,7 @@ jobs:
           name: ${{ inputs.image }}-${{ inputs.platform }}-${{ inputs.variant }}-tags
           path: /tmp/jupyter/tags/
       - name: Apply tags to the loaded image 🏷
-        run: python3 -m tagging.apply_tags --short-image-name ${{ inputs.image }} --tags-dir /tmp/jupyter/tags/ --platform ${{ inputs.platform }} --variant ${{ inputs.variant }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
+        run: python3 -m tagging.apply_tags --short-image-name ${{ inputs.image }} --tags-dir /tmp/jupyter/tags/ --platform ${{ inputs.platform }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }} --variant ${{ inputs.variant }}
       # This step is needed to prevent pushing non-multi-arch "latest" tag
       - name: Remove the "latest" tag from the image 🗑️
         run: docker image rmi ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ inputs.image }}:latest
