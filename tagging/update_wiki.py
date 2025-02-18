@@ -14,34 +14,36 @@ git = plumbum.local["git"]
 
 LOGGER = logging.getLogger(__name__)
 
-YEAR_TABLE_HEADER = """\
-## {year}
 
-| Month                  | Builds | Images | Commits |
-| ---------------------- | ------ | ------ | ------- |
-"""
-
-
-def build_monthly_table_line(year_month_file: Path) -> str:
+def calculate_monthly_stat(
+    year_month_file: Path, year_month_date: datetime.date
+) -> tuple[int, int, int]:
     year_month_file_content = year_month_file.read_text()
-    images = year_month_file_content.count("Build manifest")
+
     builds = sum(
         "jupyter/base-notebook" in line and "aarch64" not in line
         for line in year_month_file_content.split("\n")
     )
-    year_month = year_month_file.stem
-    current_month = datetime.date(
-        year=int(year_month[:4]), month=int(year_month[5:]), day=1
-    )
-    next_month = current_month + relativedelta.relativedelta(months=1)
-    future = (
-        git["log", "--oneline", "--since", current_month, "--until", next_month]
-        & plumbum.BG
-    )
+
+    images = year_month_file_content.count("Build manifest")
+
+    with plumbum.local.env(TZ="UTC"):
+        future = (
+            git[
+                "log",
+                "--oneline",
+                "--since",
+                f"{year_month_date}.midnight",
+                "--until",
+                f"{year_month_date + relativedelta.relativedelta(months=1)}.midnight",
+                "--first-parent",
+            ]
+            & plumbum.BG
+        )
     future.wait()
     commits = len(future.stdout.splitlines())
 
-    return f"| [`{year_month}`](./{year_month}) | {builds: <6} | {images: <6} | {commits: <7} |\n"
+    return builds, images, commits
 
 
 def regenerate_home_wiki_page(wiki_dir: Path) -> None:
@@ -55,10 +57,43 @@ def regenerate_home_wiki_page(wiki_dir: Path) -> None:
         : wiki_home_content.find(YEAR_MONTHLY_TABLES) + len(YEAR_MONTHLY_TABLES)
     ]
 
+    YEAR_TABLE_HEADER = """\
+## {year}
+
+| Month                  | Builds | Images | Commits                                                                                         |
+| ---------------------- | ------ | ------ | ----------------------------------------------------------------------------------------------- |
+"""
+
+    GITHUB_COMMITS_URL = (
+        "[{}](https://github.com/jupyter/docker-stacks/commits/main/?since={}&until={})"
+    )
+
     for year_dir in sorted((wiki_dir / "monthly-files").glob("*"), reverse=True):
         wiki_home_content += "\n" + YEAR_TABLE_HEADER.format(year=year_dir.name)
+        year_builds, year_images, year_commits = 0, 0, 0
         for year_month_file in sorted(year_dir.glob("*.md"), reverse=True):
-            wiki_home_content += build_monthly_table_line(year_month_file)
+            year_month = year_month_file.stem
+            year_month_date = datetime.date(
+                year=int(year_month[:4]), month=int(year_month[5:]), day=1
+            )
+            builds, images, commits = calculate_monthly_stat(
+                year_month_file, year_month_date
+            )
+            year_builds += builds
+            year_images += images
+            year_commits += commits
+            commits_url = GITHUB_COMMITS_URL.format(
+                commits,
+                year_month_date,
+                year_month_date + relativedelta.relativedelta(day=31),
+            )
+            monthly_line = f"| [`{year_month}`](./{year_month}) | {builds: <6} | {images: <6} | {commits_url: <95} |\n"
+            wiki_home_content += monthly_line
+        year_commits_url = GITHUB_COMMITS_URL.format(
+            year_commits, f"{year_dir.name}-01-01", f"{year_dir.name}-12-31"
+        )
+        year_total_line = f"| **Total**              | {year_builds: <6} | {year_images: <6} | {year_commits_url: <95} |\n"
+        wiki_home_content += year_total_line
 
     wiki_home_file.write_text(wiki_home_content)
     LOGGER.info("Updated Home page")
@@ -76,6 +111,7 @@ def update_monthly_wiki_page(
     year = year_month[:4]
     monthly_page = wiki_dir / "monthly-files" / year / (year_month + ".md")
     if not monthly_page.exists():
+        monthly_page.parent.mkdir(exist_ok=True)
         monthly_page.write_text(MONTHLY_PAGE_HEADER)
         LOGGER.info(f"Created monthly page: {monthly_page.relative_to(wiki_dir)}")
 
@@ -130,7 +166,7 @@ def update_wiki(
         year_month = get_manifest_year_month(manifest_file)
         year = year_month[:4]
         copy_to = wiki_dir / "manifests" / year / year_month / manifest_file.name
-        copy_to.parent.mkdir(exist_ok=True)
+        copy_to.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(manifest_file, copy_to)
         LOGGER.info(f"Added manifest file: {copy_to.relative_to(wiki_dir)}")
 

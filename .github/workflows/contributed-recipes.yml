@@ -18,10 +18,17 @@ on:
       - "docs/using/recipe_code/**"
   workflow_dispatch:
   workflow_call:
+    inputs:
+      # There is no good way to detect if the workflow was called using workflow_call
+      # https://github.com/actions/runner/discussions/1884
+      called-using-workflow-call:
+        description: "Was the workflow called using workflow_call"
+        required: true
+        type: boolean
 
 jobs:
   generate-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -43,9 +50,17 @@ jobs:
       - name: Checkout Repo ⚡️
         uses: actions/checkout@v4
 
+      - name: Load image to Docker 📥
+        if: ${{ inputs.called-using-workflow-call && matrix.parent-image != '' }}
+        uses: ./.github/actions/load-image
+        with:
+          image: ${{ matrix.parent-image }}
+          platform: ${{ matrix.platform }}
+          variant: default
+
+      # Not pulling the image, because it might be loaded from previous step or will be downloaded automatically
       - name: Build recipe 🛠
-        # We're pulling here to avoid accidentally using an image that might be present on aarch64 self-hosted runner
-        run: docker build --pull --rm --force-rm --tag my-custom-image -f ./${{ matrix.dockerfile }} ./
+        run: docker build --rm --force-rm --tag my-custom-image -f ./${{ matrix.dockerfile }} ./
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
