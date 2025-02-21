@@ -104,24 +104,44 @@ assign_positional_args 1 "${_positionals[@]}"
 # Define variables
 CONTAINER_TYPE=${_arg_container_type}
 
-source ./build-params
-
-# List of tags to apply
-TAGS=("latest" "ubuntu24.04")
-
-# Validate TYPE parameter
+# Check if CONTAINER_TYPE is provided and validate its value.
+# If CONTAINER_TYPE is not empty but also not equal to "gpu", print an error message and exit with status 1.
 if [ -n "$CONTAINER_TYPE" ] && [ "$CONTAINER_TYPE" != "gpu" ]; then
     echo "Invalid CONTAINER_TYPE specified. Only 'gpu' or none is allowed."
     exit 1
 fi
 
+# Load build parameters from file
+if [ ! -f "./build-params" ]; then
+    echo "Error: 'build-params' file not found."
+    exit 1
+fi
+source ./build-params
+
+# Define array of tags to apply to the built image
+TAGS=("latest" "ubuntu${UBUNTU_VERSION}")
+
+# Set default values if not defined in parameters file
+default_root_image="${BASE_REGISTRY}/${BASE_IMAGE}:latest"
+default_gpu_root_image="${BASE_REGISTRY}/${BASE_IMAGE}:gpu-latest"
+default_base_output="${BASE_REGISTRY}/${BASE_REPOSITORY}"
+default_base_output_cloud="${BASE_REGISTRY_CLOUD}/${BASE_REPOSITORY}"
+
+ROOT_IMAGE=${ROOT_IMAGE:-$default_root_image}
+GPU_ROOT_IMAGE=${GPU_ROOT_IMAGE:-$default_gpu_root_image}
+BASE_OUTPUT=${BASE_OUTPUT:-$default_base_output}
+BASE_OUTPUT_CLOUD=${BASE_OUTPUT_CLOUD:-$default_base_output_cloud}
+
+# If the CONTAINER_TYPE is "gpu", set ROOT_IMAGE to GPU_ROOT_IMAGE.
 if [ "$CONTAINER_TYPE" = "gpu" ]; then
 	ROOT_IMAGE=${GPU_ROOT_IMAGE}
 fi
 
+# Print the configuration for verification
+echo "Container Type: ${CONTAINER_TYPE}"
 echo "Base Container: ${ROOT_IMAGE}"
 echo "Base Output: ${BASE_OUTPUT}"
-echo "Base Output - cloud: ${BASE_OUTPUT_CLOUD}"
+# echo "Base Output - cloud: ${BASE_OUTPUT_CLOUD}"
 
 docker pull ${ROOT_IMAGE}
 
@@ -134,14 +154,15 @@ for TAG in "${TAGS[@]}"; do
     fi
 
 	echo "Image: ${BASE_OUTPUT}:${TAG_NAME}"
-	echo "Image - cloud: ${BASE_OUTPUT_CLOUD}:${TAG_NAME}"
+	# echo "Image - cloud: ${BASE_OUTPUT_CLOUD}:${TAG_NAME}"
 
     docker buildx build . \
     	--platform linux/amd64 \
+		--build-arg BASE_IMAGE=${ROOT_IMAGE} \
 		--build-arg ROOT_IMAGE=${ROOT_IMAGE} \
 		-t ${BASE_OUTPUT}:${TAG_NAME} \
-		-t ${BASE_OUTPUT_CLOUD}:${TAG_NAME} \
 		--push
+		# -t ${BASE_OUTPUT_CLOUD}:${TAG_NAME} \
 done
 
 echo "Docker images pushed successfully!"
