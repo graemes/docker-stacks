@@ -1,4 +1,10 @@
-# BASE_REGISTRY="registry.graemes.cloud/graemes"
-# BASE_REGISTRY_CLOUD="registry.graemes.cloud/graemes"
+#!/bin/bash
+# Define the base registry and other parameters for building Docker images.
+
 BASE_REGISTRY="repo.graemes.cloud/jupyter/stacks"
 BASE_REGISTRY_CLOUD="repo.graemes.cloud/jupyter/stacks"
+REGISTRY="repo.graemes.cloud"
+OWNER="jupyter/stacks"
+
+UBUNTU_VERSION="24.04"
+

@@ -1,4 +1,6 @@
 #!/bin/bash
 
-./build-docker-cpu.sh
-./build-docker-gpu.sh
+set -e
+../build-container.sh
+../build-container.sh gpu
+
