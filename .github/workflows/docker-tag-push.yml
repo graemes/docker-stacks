@@ -12,56 +12,68 @@ on:
         description: Image name
         required: true
         type: string
-      platform:
-        description: Image platform
-        required: true
-        type: string
       variant:
         description: Variant tag prefix
         required: true
         type: string
+      timeout-minutes:
+        description: Timeout in minutes
+        default: 25
+        type: number
     secrets:
       REGISTRY_USERNAME:
         required: true
       REGISTRY_TOKEN:
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   tag-push:
     runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    strategy:
+      matrix:
+        platform: [aarch64, x86_64]
 
     steps:
       - name: Checkout Repo ⚡️
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Free disk space 🧹
+        uses: ./.github/actions/free-disk-space
+        if: contains(inputs.variant, 'cuda') || inputs.image == 'datascience-notebook' || inputs.image == 'all-spark-notebook'
       - name: Create dev environment 📦
         uses: ./.github/actions/create-dev-env
-      - name: Load image to Docker 📥
-        uses: ./.github/actions/load-image
+
+      - name: Download image tar and apply tags 🏷
+        uses: ./.github/actions/apply-single-tags
         with:
           image: ${{ inputs.image }}
-          platform: ${{ inputs.platform }}
           variant: ${{ inputs.variant }}
+          platform: ${{ matrix.platform }}
 
       - name: Login to Registry 🔐
         if: env.PUSH_TO_REGISTRY == 'true'
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: quay.io
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          docker login ${{ env.REGISTRY }} \
+            --username ${{ secrets.REGISTRY_USERNAME }} \
+            --password ${{ secrets.REGISTRY_TOKEN }} || \
+          docker login ${{ env.REGISTRY }} \
+            --username ${{ secrets.REGISTRY_USERNAME }} \
+            --password ${{ secrets.REGISTRY_TOKEN }}
+        shell: bash
+        id: login
 
-      - name: Download tags file 📥
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.image }}-${{ inputs.platform }}-${{ inputs.variant }}-tags
-          path: /tmp/jupyter/tags/
-      - name: Apply tags to the loaded image 🏷
-        run: python3 -m tagging.apply_tags --short-image-name ${{ inputs.image }} --tags-dir /tmp/jupyter/tags/ --platform ${{ inputs.platform }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }} --variant ${{ inputs.variant }}
-      # This step is needed to prevent pushing non-multi-arch "latest" tag
-      - name: Remove the "latest" tag from the image 🗑️
-        run: docker image rmi ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ inputs.image }}:latest
-
-      - name: Push Images to Registry 📤
+      - name: Push single platform images to Registry 📤
         if: env.PUSH_TO_REGISTRY == 'true'
-        run: docker push --all-tags ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ inputs.image }}
+        run: |
+          docker push --all-tags ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ inputs.image }} || \
+          docker push --all-tags ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ inputs.image }}
+        shell: bash
+
+      - name: Logout from Registry 🔐
+        if: always() && env.PUSH_TO_REGISTRY == 'true' && steps.login.outcome == 'success'
+        run: |
+          docker logout ${{ env.REGISTRY }}
         shell: bash

@@ -4,7 +4,7 @@ This section describes how to build a custom set of images.
 It may be helpful if you need to change the Ubuntu or Python version, or to make a significant change to the build process itself.
 
 This project only builds one set of images at a time.
-If you want to use older images, take a look [here](https://jupyter-docker-stacks.readthedocs.io/en/latest/#using-old-images).
+If you want to use older images, [take a look here](../index.rst/#using-old-images).
 
 ## Automating your build using template cookiecutter project
 
@@ -19,9 +19,9 @@ Our repository provides several customization points:
 - `PYTHON_VERSION` (docker argument) - the Python version to install in `docker-stacks-foundation` image
 - `REGISTRY`, `OWNER`, `BASE_IMAGE` (docker arguments) - they allow to specify parent image for all the other images
 - `REGISTRY`, `OWNER` (part of `env` in some GitHub workflows) - these allow to properly tag and refer to images during following steps:
-  [`build-test-upload`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker-build-test-upload.yml),
-  [`tag-push`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker-tag-push.yml) and
-  [`merge-tags`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker-merge-tags.yml)
+  - [`build-test-upload`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker-build-test-upload.yml)
+  - [`contributed-recipes`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/contributed-recipes.yml)
+  - [`tag-push-merge`](https://github.com/jupyter/docker-stacks/blob/main/.github/workflows/docker-tag-push-merge.yml)
 
 These customization points can't be changed during runtime.
 Read more about [Docker build arguments](https://docs.docker.com/build/building/variables/#arg-usage-example) and [GitHub environment variables for a single workflow](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#defining-environment-variables-for-a-single-workflow).
@@ -55,9 +55,9 @@ FROM $BASE_IMAGE
 ...
 ```
 
-Include the below file in your project:
+Include the file below in your project:
 
-```{literalinclude} recipe_code/docker-bake.python312.hcl
+```{literalinclude} recipe_code/docker-bake.custom-python.hcl
 :force:
 :language: hcl
 :caption: docker-bake.hcl

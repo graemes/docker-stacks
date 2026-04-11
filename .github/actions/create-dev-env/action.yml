@@ -5,12 +5,21 @@ runs:
   using: composite
   steps:
     - name: Set Up Python 🐍
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
-        python-version: "3.12"
+        python-version: 3.12
 
     - name: Install Dev Dependencies 📦
       run: |
         pip install --upgrade pip
         pip install --upgrade -r requirements-dev.txt
       shell: bash
+
+    # We need to have a recent docker version
+    # More info: https://github.com/jupyter/docker-stacks/pull/2255
+    # Can be removed after Docker Engine is updated
+    # https://github.com/actions/runner-images/issues/11766
+    - name: Set Up Docker 🐳
+      uses: docker/setup-docker-action@1a6edb0ba9ac496f6850236981f15d8f9a82254d # v5.0.0
+      with:
+        set-host: true

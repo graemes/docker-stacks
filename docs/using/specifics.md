@@ -44,8 +44,7 @@ You can build a `pyspark-notebook` image with a different `Spark` version by ove
 
 - Spark distribution is defined by the combination of Spark, Hadoop, and Scala versions,
   see [Download Apache Spark](https://spark.apache.org/downloads.html) and the [archive repo](https://archive.apache.org/dist/spark/) for more information.
-
-  - `openjdk_version`: The version of the OpenJDK (JRE headless) distribution (`17` by default).
+  - `openjdk_version`: The version of the OpenJDK (JRE headless) distribution (`21` by default).
     - This version needs to match the version supported by the Spark distribution used above.
     - See [Spark Overview](https://spark.apache.org/docs/latest/#downloading) and [Ubuntu packages](https://packages.ubuntu.com/search?keywords=openjdk).
   - `spark_version` (optional): The Spark version to install, for example `3.5.0`.
@@ -238,7 +237,7 @@ sdf_len(sc, 100, repartition = 1) %>%
 ### Define Spark Dependencies
 
 ```{note}
-This example is given for [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/hadoop/current/install.html).
+This example is given for [Elasticsearch](https://www.elastic.co/docs/reference/elasticsearch-hadoop/installation).
 ```
 
 Spark dependencies can be declared thanks to the `spark.jars.packages` property

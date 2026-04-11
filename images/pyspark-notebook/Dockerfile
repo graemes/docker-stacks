@@ -16,7 +16,7 @@ USER root
 # Spark dependencies
 # Default values can be overridden at build time
 # (ARGS are in lowercase to distinguish them from ENV)
-ARG openjdk_version="17"
+ARG openjdk_version="21"
 
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
@@ -33,6 +33,7 @@ ARG scala_version
 # You need to use https://archive.apache.org/dist/spark/ website if you want to download old Spark versions
 # But it seems to be slower, that's why we use the recommended site for download
 ARG spark_download_url="https://dlcdn.apache.org/spark/"
+ARG derby_version="10.17.1.0"
 
 ENV SPARK_HOME=/usr/local/spark
 ENV PATH="${PATH}:${SPARK_HOME}/bin"
@@ -47,9 +48,26 @@ RUN /opt/setup-scripts/setup_spark.py \
     --scala-version="${scala_version}" \
     --spark-download-url="${spark_download_url}"
 
+# Spark bundles Derby 10.16.1.1 by default; replace it with a fixed release.
+RUN set -eux; \
+    derby_jar="$(find "${SPARK_HOME}/jars" -maxdepth 1 -type f -name 'derby-*.jar' | head -n 1)"; \
+    test -n "${derby_jar}"; \
+    derby_dir="$(dirname "${derby_jar}")"; \
+    curl -fsSL -o "/tmp/derby-${derby_version}.jar" \
+      "https://repo1.maven.org/maven2/org/apache/derby/derby/${derby_version}/derby-${derby_version}.jar"; \
+    rm -f "${derby_jar}"; \
+    mv "/tmp/derby-${derby_version}.jar" "${derby_dir}/"
+
 # Configure IPython system-wide
 COPY ipython_kernel_config.py "/etc/ipython/"
 RUN fix-permissions "/etc/ipython/"
+
+# macOS Rosetta virtualization creates junk directory which gets owned by root further up.
+# It'll get re-created, but as USER runner after the next directive so hopefully should not cause permission issues.
+#
+# More info: https://github.com/jupyter/docker-stacks/issues/2296
+# hadolint ignore=DL3059
+RUN rm -rf "/home/${NB_USER}/.cache/"
 
 USER ${NB_UID}
 
@@ -57,13 +75,12 @@ USER ${NB_UID}
 # NOTE: It's important to ensure compatibility between Pandas versions.
 # The pandas version in this Dockerfile should match the version
 # on which the Pandas API for Spark is built.
-# To find the right version:
-# 1. Check out the Spark branch you are on: <https://github.com/apache/spark>
-# 2. Find the pandas version in the file `dev/infra/Dockerfile`.
+# To find the right version, check the pandas version being installed here:
+# https://github.com/apache/spark/blob/<SPARK_VERSION>/dev/infra/Dockerfile
 RUN mamba install --yes \
     'grpcio-status' \
     'grpcio' \
-    'pandas=2.2.2' \
+    'pandas=2.2.3' \
     'pyarrow' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \

@@ -60,7 +60,7 @@ docker run -it --rm \
 The default version of `Python` that ships with the image may not be the version you want.
 The instructions below permit adding a conda environment with a different `Python` version and making it accessible to Jupyter.
 You may also use older images like `jupyter/base-notebook:python-3.10`.
-A list of all tags can be found [here](https://github.com/jupyter/docker-stacks/wiki)
+We also maintain a [full build history](https://github.com/jupyter/docker-stacks/wiki).
 
 ```{literalinclude} recipe_code/custom_environment.dockerfile
 :language: docker
@@ -176,7 +176,7 @@ We also have contributed recipes for using JupyterHub.
 
 ### Use JupyterHub's DockerSpawner
 
-You can find an example of using DockerSpawner [here](https://github.com/jupyterhub/jupyterhub-deploy-docker/tree/main/basic-example).
+You can find [an example of using DockerSpawner](https://github.com/jupyterhub/jupyterhub-deploy-docker/tree/main/basic-example).
 
 ### Containers with a specific version of JupyterHub
 
@@ -400,7 +400,7 @@ docker run -it --rm \
 ## Enable nbclassic-extension spellchecker for markdown (or any other nbclassic-extension)
 
 ```{note}
-This recipe only works for NBCassic with Jupyter Notebook < 7.
+This recipe only works for NBClassic with Jupyter Notebook < 7.
 It is recommended to use [jupyterlab-spellchecker](https://github.com/jupyterlab-contrib/spellchecker) in modern environments.
 ```
 
@@ -520,3 +520,20 @@ they may be explained in the "Installation instructions" section of the Download
 ```{literalinclude} recipe_code/oracledb.dockerfile
 :language: docker
 ```
+
+## Running Jupyter Docker Stacks with Singularity
+
+You can also start Jupyter Docker Stacks containers using **Singularity** instead of Docker. For example:
+
+```bash
+singularity run --bind "${PWD}:/home/${USER}/work" --containall docker://quay.io/jupyter/datascience-notebook:2025-12-31
+```
+
+- `--bind "${PWD}:/home/${USER}/work"` mounts your current working directory into the container at `/home/$USER/work`.
+  When running the image with Singularity, the container uses your host username inside the container.
+  Therefore, the bind target is `/home/${USER}/work` instead of the usual `/home/jovyan/work`.
+
+- `--containall` starts the container in a fully isolated environment, ignoring most of the host’s filesystem and environment except for explicitly bound paths.
+  By default, Singularity would bind your home directory automatically.
+  If you have Python packages installed there, this may cause conflicts with packages inside the container.
+  Using `--containall` avoids such interference.

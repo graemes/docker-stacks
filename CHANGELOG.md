@@ -3,6 +3,121 @@
 This changelog only contains breaking and/or significant changes manually introduced to this repository (using Pull Requests).
 All image manifests can be found in [the wiki](https://github.com/jupyter/docker-stacks/wiki).
 
+## 2026-04-02
+
+Affected: `pyspark-notebook`, `all-spark-notebook`.
+
+- **Breaking:** `pyspark-notebook`: Update pyspark-notebook to java 21 and derby 10.17.1.0 ([#2424](https://github.com/jupyter/docker-stacks/pull/2424))
+
+## 2025-12-31
+
+Affected: `pytorch-notebook`.
+
+- **Non-breaking:** `pytorch-notebook`: Build pytorch cuda13 image instead of cuda11 ([#2391](https://github.com/jupyter/docker-stacks/pull/2391))
+
+## 2025-12-02
+
+Affected: `tensorflow-notebook`, `pytorch-notebook`.
+
+- **Non-breaking:** Enable CUDA build for ARM64 ([#2352](https://github.com/jupyter/docker-stacks/pull/2352)).
+
+## 2025-11-29
+
+Affected: all images.
+
+- **Breaking:** Use Docker v29 and `docker buildx imagetools create` ([#2368](https://github.com/jupyter/docker-stacks/pull/2368)).
+
+## 2025-11-24
+
+Affected: all images.
+
+- **Non-breaking:** Add Dev Container support ([#2358](https://github.com/jupyter/docker-stacks/pull/2358)).
+- **Non-breaking:** Add recipe on running Jupyter Docker Stacks with Singularity ([#2357](https://github.com/jupyter/docker-stacks/pull/2357)).
+
+## 2025-11-06
+
+Affected: `scipy-notebook`.
+
+- **Breaking:** `scipy-notebook`: Remove facets package installation ([#2347](https://github.com/jupyter/docker-stacks/pull/2347)).
+
+## 2025-09-16
+
+Affected: all images.
+
+- **Non-breaking:** Publish SBOM using anchore/sbom-action ([#2317](https://github.com/jupyter/docker-stacks/pull/2317)).
+
+## 2025-08-15
+
+Affected: all images.
+
+- **Breaking:** `docker-stacks-foundation`: switch to Python 3.13 ([#2163](https://github.com/jupyter/docker-stacks/pull/2163)).
+
+## 2025-04-13
+
+Affected: `tensorflow-notebook`.
+
+- **Non-breaking:** `tesnorflow-notebook`: Install latest tensorflow ([#2263](https://github.com/jupyter/docker-stacks/pull/2263)).
+
+## 2025-04-12
+
+Affected: all images.
+
+- **Non-breaking:** `docker-stacks-foundation`: Pin libxml2 to avoid ABI breakage ([#2283](https://github.com/jupyter/docker-stacks/pull/2283)).
+
+## 2025-04-11
+
+Affected: all images.
+
+- **Non-breaking:** Make docker tag-push depend on contributed recipes in CI ([#2282](https://github.com/jupyter/docker-stacks/pull/2282)).
+
+## 2025-04-01
+
+Affected: all images.
+
+- **Non-breaking:** Apply and merge tags in the same place ([#2274](https://github.com/jupyter/docker-stacks/pull/2274)).
+
+## 2025-03-23
+
+Affected: `tensorflow-notebook`.
+
+- **Non-breaking:** `tensorflow-notebook`: Use mamba to install jupyter-server-proxy ([#2262](https://github.com/jupyter/docker-stacks/pull/2262)).
+
+## 2025-03-22
+
+Affected: all images.
+
+- **Non-breaking:** Use tty for running docker commands by default ([#2260](https://github.com/jupyter/docker-stacks/pull/2260)).
+- **Non-breaking:** Improve logs around running docker ([#2261](https://github.com/jupyter/docker-stacks/pull/2261)).
+
+## 2025-03-21
+
+Affected: all images.
+
+- **Non-breaking:** Refactor TrackedContainer run_detached/exec_cmd functions ([#2256](https://github.com/jupyter/docker-stacks/pull/2256)).
+- **Non-breaking:** Do not allocate TTY in tests if not needed ([#2257](https://github.com/jupyter/docker-stacks/pull/2257)).
+- **Non-breaking:** `base-notebook`: Flush output in Python before running execvp ([#2258](https://github.com/jupyter/docker-stacks/pull/2258)).
+
+## 2025-03-20
+
+Affected: all images except `docker-stacks-foundation`.
+
+- **Non-breaking:** `base-notebook`: Refactor healthcheck tests to use one function ([#2254](https://github.com/jupyter/docker-stacks/pull/2254)).
+- **Non-breaking:** `base-notebook`: Test server listening on IPv4/IPv6 ([#2255](https://github.com/jupyter/docker-stacks/pull/2255)).
+
+## 2025-03-12
+
+Affected: all images.
+
+- **Non-breaking:** Add `conda` and `mamba` version taggers ([#2251](https://github.com/jupyter/docker-stacks/pull/2251)).
+- **Non-breaking:** Make taggers and manifests functions ([#2252](https://github.com/jupyter/docker-stacks/pull/2252)).
+
+## 2025-02-21
+
+Affected: all images.
+
+- **Non-breaking:** Better tagging directory structure ([#2228](https://github.com/jupyter/docker-stacks/pull/2228)).
+- **Non-breaking:** Better testing directory structure ([#2231](https://github.com/jupyter/docker-stacks/pull/2231)).
+
 ## 2025-02-18
 
 Affected: all images.
@@ -11,6 +126,7 @@ Affected: all images.
 - **Non-breaking:** don't create extra free space in runners for cuda images ([#2218](https://github.com/jupyter/docker-stacks/pull/2218)).
 - **Non-breaking:** revert "Pin some packages to fix `r-notebook` and `datascience-notebook` under aarch64" ([#2220](https://github.com/jupyter/docker-stacks/pull/2220)).
 - **Non-breaking:** Simplify and improve `test_packages.py` ([#2219](https://github.com/jupyter/docker-stacks/pull/2219)).
+- **Non-breaking:** Use Python 3.12 for internal code ([#2222](https://github.com/jupyter/docker-stacks/pull/2222)).
 
 ## 2025-02-17
 

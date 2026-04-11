@@ -4,6 +4,19 @@
 - [Image Relationships](#image-relationships)
 - [Community Stacks](#community-stacks)
 
+> **Pull vs Build: Quick Guidance**
+>
+> Images are published on **Quay.io** registry and most users should start by pulling an existing image that closely matches their needs.
+> Pulling a pre-built image is fast and suitable for common use cases such as running notebooks, teaching, or standard data science workflows.
+>
+> Building images locally is recommended only when additional customization is required, for example:
+>
+> - adding system-level packages that cannot be installed at runtime,
+> - preinstalling large or complex language-specific libraries,
+> - creating organization-specific images or heavy customization for CI.
+>
+> If unsure, try an existing Quay.io image first; if it falls short, follow the custom images guide to build a tailored image.
+
 Using one of the Jupyter Docker Stacks requires two choices:
 
 1. Which Docker image you wish to use
@@ -97,7 +110,7 @@ It contains:
 - Everything in `jupyter/minimal-notebook` and its ancestor images
 - The [R](https://www.r-project.org/) interpreter and base environment
 - [IRKernel](https://irkernel.github.io/) to support R code in Jupyter notebooks
-- [tidyverse](https://www.tidyverse.org/)
+- [tidyverse](https://tidyverse.org/)
   packages from [conda-forge](https://conda-forge.org/feedstock-outputs/index.html)
 - [caret](https://topepo.github.io/caret/index.html),
   [crayon](https://cran.r-project.org/web/packages/crayon/index.html),
@@ -172,8 +185,6 @@ It contains:
 - [ipympl](https://github.com/matplotlib/ipympl) and
   [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/)
   for interactive visualizations and plots in Python notebooks
-- [Facets](https://github.com/PAIR-code/facets)
-  for visualizing machine learning datasets
 
 ### jupyter/tensorflow-notebook
 
@@ -244,7 +255,7 @@ It contains:
 We provide CUDA accelerated versions of the `pytorch-notebook` and `tensorflow-notebook` images.
 Prepend a CUDA prefix (versioned prefix like `cuda12-` for `pytorch-notebook` or just `cuda-` for `tensorflow-notebook`) to the image tag
 to allow PyTorch or TensorFlow operations to use compatible NVIDIA GPUs for accelerated computation.
-We only build `pytorch-notebook` for last two major versions of CUDA.
+We only build `pytorch-notebook` for the last two major versions of CUDA.
 The `tensorflow-notebook` image only supports the latest CUDA version listed in the [officially tested build configurations](https://www.tensorflow.org/install/source#gpu).
 
 For example, you could use the image `quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8` or `quay.io/jupyter/tensorflow-notebook:cuda-latest`.
@@ -255,7 +266,7 @@ The following diagram depicts the build dependency tree of the core images. (i.e
 Any given image inherits the complete content of all ancestor images pointing to it.
 
 [![Image inheritance
-diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFj0FqwzAQRfc5hfAqpYiS7kpoT9BdugyEsTxuplZmjDRqcEvvXinQggzGK8Gb97_4rRc3dATv5ntjTIc9JK-nXlgjfaF5Nk_7zCUQsoKScEajBA1Aut_kU5PaxJqOvH19O5gr6TnfidUE9AgR7xpjX0yXf8Fgo4Ibou0lcXdrK-VLt5Jrc4NlUWxFhiJXoBgXYrqAr6Q5K150NE6VVZPiNIocJfRerv_8yPcudWA-IRCwNgvJcVIJ7jyP7XYPt-fxLx8XCvJkyBTZ4eqUsGp8JE-wMnac4ghhqKw5Kx54b-fmzy_M3cYh)
+diagram](../images/inherit.svg)](http://interactive.blockdiag.com/?compression=deflate&src=eJyFj8FKxDAQhu_7FKEnRYKsnmTRJ9ibe1yQaTp1x2ZnSjJxqeK7mywopFB6Cnzz_X_4Wy9u6AjezffGmA57SF7femGN9IXm2TztMpdAyApKwhmNEjQA6W6TT01qE2s68s3-8GoupKd8J1YT0CNEvG2MfTFd_gWDjQpuiLaXxN21rZQv3UquzQ2WRbEVGYpcgWKciekMvpLmrHjR0ThVVk2K0yhylNB7ufzzI9-51IH5hEDA2iwkx0kluNM8tn24vz6Pf_m4UJAnQ6bIDlenhFXjI3mClbHjFEcIQ2XNWfHAezs3f34BzoTGIw)
 
 ### Builds
 
@@ -288,18 +299,20 @@ The core stacks are but a tiny sample of what's possible when combining Jupyter 
 We encourage members of the Jupyter community to create their own stacks based on the core images and link them below.
 See the [contributing guide](../contributing/stacks.md) for information about how to create your own Jupyter Docker Stack.
 
-| Flavor         | Binder                  | Description                                                                                               |
-| -------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
-| [csharp]       | [![bb]][csharp_b]       | More than 200 Jupyter Notebooks with example **C#** code                                                  |
-| [education]    | [![bb]][education_b]    | **`nbgrader`** and `RISE` on top of the `datascience-notebook` image                                      |
-| [ihaskell]     | [![bb]][ihaskell_b]     | Based on [**IHaskell**][ihaskell_project]. Includes popular packages and example notebooks                |
-| [java]         | [![bb]][java_b]         | [**IJava**][ijava] kernel on top of the `minimal-notebook` image                                          |
-| [sage]         | [![bb]][sage_b]         | [**sagemath**][sagemath] kernel on top of the `minimal-notebook` image                                    |
-| [cgspatial]    | [![bb]][cgspatial_b]    | Major **geospatial** Python & R libraries on top of the `datascience-notebook` image                      |
-| [kotlin]       | [![bb]][kotlin_b]       | [**Kotlin** kernel for Jupyter/IPython][kotlin_kernel] on top of the `base-notebook` image                |
-| [transformers] | [![bb]][transformers_b] | [**Transformers**][transformers_lib] and NLP libraries such as `Tensorflow`, `Keras`, `Jax` and `PyTorch` |
-| [scraper]      | [![bb]][scraper_b]      | **Scraper** tools (`selenium`, `chromedriver`, `beatifulsoup4`, `requests`) on `minimal-notebook` image   |
-| [almond]       | [![bb]][almond_b]       | Scala kernel for Jupyter using **Almond** on top of the `base-notebook` image                             |
+| Flavor         | Binder                  | Description                                                                                                                             |
+| -------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [csharp]       | [![bb]][csharp_b]       | More than 200 Jupyter Notebooks with example **C#** code                                                                                |
+| [education]    | [![bb]][education_b]    | **`nbgrader`** and `RISE` on top of the `datascience-notebook` image                                                                    |
+| [ihaskell]     | [![bb]][ihaskell_b]     | Based on [**IHaskell**][ihaskell_project]. Includes popular packages and example notebooks                                              |
+| [java]         | [![bb]][java_b]         | [**IJava**][ijava] kernel on top of the `minimal-notebook` image                                                                        |
+| [sage]         | [![bb]][sage_b]         | [**sagemath**][sagemath] kernel on top of the `minimal-notebook` image                                                                  |
+| [cgspatial]    | [![bb]][cgspatial_b]    | Major **geospatial** Python & R libraries on top of the `datascience-notebook` image                                                    |
+| [kotlin]       | [![bb]][kotlin_b]       | [**Kotlin** kernel for Jupyter/IPython][kotlin_kernel] on top of the `base-notebook` image                                              |
+| [transformers] | [![bb]][transformers_b] | [**Transformers**][transformers_lib] and NLP libraries such as `Tensorflow`, `Keras`, `Jax` and `PyTorch`                               |
+| [scraper]      | [![bb]][scraper_b]      | **Scraper** tools (`selenium`, `chromedriver`, `beatifulsoup4`, `requests`) on `minimal-notebook` image                                 |
+| [almond]       | [![bb]][almond_b]       | Scala kernel for Jupyter using **Almond** on top of the `base-notebook` image                                                           |
+| [lisp-stat]    | [![bb]][lisp-stat_b]    | Common Lisp statistical computing environment on top of the `minimal-notebook` image                                                    |
+| [sequencing]   | [![bb]][sequencing_b]   | Collection for bioinformatics sequencing data analysis, covering bulk RNA-seq, single-cell RNA-seq, spatial sequencing, and multi-omics |
 
 [bb]: https://static.mybinder.org/badge_logo.svg
 [csharp]: https://github.com/tlinnet/csharp-notebook
@@ -327,6 +340,10 @@ See the [contributing guide](../contributing/stacks.md) for information about ho
 [scraper_b]: https://mybinder.org/v2/gh/rgriffogoes/scraper-notebook/main
 [almond]: https://almond.sh
 [almond_b]: https://mybinder.org/v2/gh/almond-sh/examples/master?urlpath=lab%2Ftree%2Fnotebooks%2Findex.ipynb
+[lisp-stat]: https://lisp-stat.dev
+[lisp-stat_b]: https://mybinder.org/v2/gh/Lisp-Stat/IPS9/HEAD?urlpath=%2Fdoc%2Ftree%2Findex.ipynb
+[sequencing]: https://github.com/huchlab/sequencing-docker-stacks
+[sequencing_b]: https://mybinder.org/v2/gh/huchlab/sequencing-docker-stacks/main?urlpath=lab%2Ftree%2FREADME.ipynb
 
 ### Other GPU-accelerated notebooks
 
@@ -335,7 +352,7 @@ See the [contributing guide](../contributing/stacks.md) for information about ho
 | [GPU-Jupyter][gpu]                | Power of your NVIDIA GPU and GPU calculations using Tensorflow and Pytorch in collaborative notebooks. This is done by generating a Dockerfile that consists of the **nvidia/cuda** base image, the well-maintained **docker-stacks** that is integrated as a submodule, and GPU-able libraries like **Tensorflow**, **Keras** and **PyTorch** on top of it. |
 | [myLab TH Lübeck Images][gpu_thl] | Images based on the **jupyter/docker-stacks**, built and maintained at the [myLab TH Lübeck][gpu_mylab] using build scripts similar to iot-salzburg. Several images include GPU libraries.                                                                                                                                                                   |
 | [PRP-GPU][prp_gpu]                | PRP (Pacific Research Platform) maintained [registry][prp_reg] for jupyter stack based on NVIDIA CUDA-enabled image. Added the PRP image with Pytorch and some other Python packages and GUI Desktop notebook based on <https://github.com/jupyterhub/jupyter-remote-desktop-proxy>.                                                                         |
-| [b-data][b-data]                  | GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images for [R][r_cuda], [Python][python_cuda] and [Julia][julia_cuda]. Derived from nvidia/cuda `devel`-flavored images, including TensortRT and TensorRT plugin libraries. With [code-server][code-server] next to JupyterLab. Just Python – no [Conda][conda]/[Mamba][mamba].         |
+| [b-data][b-data]                  | GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) Docker images for [R][r_cuda], [Python][python_cuda] , [MAX][max_cuda] and [Julia][julia_cuda]. Derived from nvidia/cuda `devel`-flavored images. With [code-server][code-server] next to JupyterLab. Just Python – no [Conda][conda] / [Mamba][mamba].                                        |
 
 [gpu]: https://github.com/iot-salzburg/gpu-jupyter
 [gpu_thl]: https://hub.docker.com/r/hanseware/jlab-images
@@ -345,6 +362,7 @@ See the [contributing guide](../contributing/stacks.md) for information about ho
 [b-data]: https://github.com/b-data
 [r_cuda]: https://github.com/b-data/jupyterlab-r-docker-stack/blob/main/CUDA.md
 [python_cuda]: https://github.com/b-data/jupyterlab-python-docker-stack/blob/main/CUDA.md
+[max_cuda]: https://github.com/b-data/jupyterlab-mojo-docker-stack/blob/main/CUDA.md
 [julia_cuda]: https://github.com/b-data/jupyterlab-julia-docker-stack/blob/main/CUDA.md
 [code-server]: https://github.com/coder/code-server
 [conda]: https://github.com/conda/conda

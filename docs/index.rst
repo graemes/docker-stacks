@@ -23,18 +23,19 @@ Table of Contents
    :caption: Contributor Guide
 
    contributing/issues
-   contributing/packages
-   contributing/recipes
-   contributing/lint
-   contributing/tests
    contributing/features
+   contributing/tests
+   contributing/lint
+   contributing/recipes
    contributing/stacks
+   contributing/packages
 
 .. toctree::
    :maxdepth: 2
    :caption: Maintainer Guide
 
    maintaining/new-images-and-packages-policy
+   maintaining/tagging
    maintaining/tasks
 
 .. toctree::
