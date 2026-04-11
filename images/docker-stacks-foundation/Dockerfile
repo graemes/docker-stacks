@@ -21,7 +21,8 @@ USER root
 # Install all OS dependencies for the Server that starts
 # but lacks all features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update --yes && \
+RUN echo 'Acquire::http { Proxy "http://aptcacher.graemes.com:3142"; };' > /etc/apt/apt.conf.d/00aptcacher && \
+    apt-get update --yes && \
     # - `apt-get upgrade` is run to patch known vulnerabilities in system packages
     #   as the Ubuntu base image is rebuilt too seldom sometimes (less than once a month)
     apt-get upgrade --yes && \
@@ -40,7 +41,7 @@ RUN apt-get update --yes && \
     #   See https://github.com/krallin/tini#why-tini for details
     tini \
     wget && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /etc/apt/apt.conf.d/00aptcacher && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     echo "C.UTF-8 UTF-8" >> /etc/locale.gen && \
     locale-gen
