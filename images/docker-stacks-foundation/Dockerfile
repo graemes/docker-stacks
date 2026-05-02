@@ -22,11 +22,12 @@ USER root
 # but lacks all features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'Acquire::http { Proxy "http://aptcacher.graemes.com:3142"; };' > /etc/apt/apt.conf.d/00aptcacher && \
-    mkdir -p /run/systemd && echo 'docker' > /run/systemd/container && \
     apt-get update --yes && \
     # - `apt-get upgrade` is run to patch known vulnerabilities in system packages
     #   as the Ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    apt-mark hold systemd systemd-sysv && \
     apt-get upgrade --yes && \
+    apt-mark unhold systemd systemd-sysv && \
     apt-get install --yes --no-install-recommends \
     # - bzip2 is necessary to extract the micromamba executable.
     bzip2 \
