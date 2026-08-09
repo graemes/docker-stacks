@@ -37,7 +37,7 @@ docker pull "${ROOT_IMAGE}"
 for TAG in "latest" "ubuntu${UBUNTU_VERSION}"; do
     TAG_NAME="${CONTAINER_TYPE:+${CONTAINER_TYPE}-}${TAG}"
     echo "Pushing: ${BASE_OUTPUT}:${TAG_NAME}"
-    docker buildx build . \
+    docker buildx build --no-cache --pull . \
         --platform linux/amd64 \
         --build-arg "BASE_IMAGE=${ROOT_IMAGE}" \
         --build-arg "ROOT_IMAGE=${ROOT_IMAGE}" \
