@@ -69,5 +69,22 @@ for pid in "${all_pids[@]}"; do
     wait "$pid" 2>/dev/null || overall_rc=$?
 done
 
-"${HOME}/bin/docker-clean-all.sh"
+# Routine cleanup only. This deliberately does NOT call docker-clean-all.sh.
+# That script runs `docker system prune -af --volumes` followed by
+# `docker buildx prune -af`, and the latter targets the SELECTED builder --
+# xbuilder -- with -a, so it ignores both the reservedSpace floor and the
+# [worker.oci] gc policy in /etc/buildkit/buildkitd.toml. An explicit prune
+# bypasses gc settings entirely; a generous policy does NOT make it safe.
+#
+# Measured here on 2026-08-09: it reclaimed 107.3GB mid-build and destroyed the
+# rtx6000 vLLM cache built the same morning -- the ~20GB NGC base image plus the
+# ccache/cubins-cache mounts. Rebuilding that costs hours and a 16,106-file cubin
+# download.
+#
+# It matters more than it used to: all three phases of the rtx6000 vLLM build were
+# moved onto xbuilder (vllm-builds 5973017), so this is now one shared, expensive
+# cache rather than a scratch area. The images built here are pushed through the
+# docker-container driver and never stored locally, so the nuclear option reclaims
+# nothing that docker-clean-unused.sh does not already reclaim safely.
+"${HOME}/bin/docker-clean-unused.sh"
 exit "$overall_rc"
