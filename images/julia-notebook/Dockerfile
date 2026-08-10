@@ -15,6 +15,24 @@ USER root
 
 # Julia dependencies
 # install Julia packages in /opt/julia instead of ${HOME}
+# Julia compiles every package once per CPU target, so this list multiplies
+# precompilation time directly (~158s of the ~395s julia setup step).
+#
+# Measured 2026-08-10 on the nodes jupyterhub actually schedules singleuser pods
+# onto (namshub, label app-node=true):
+#   k8sworker07  AMD Threadripper 2950X   avx avx2 fma sse4_2
+#   k8sworker08  Intel i7-7700            avx avx2 fma sse4_2
+#   k8sworker09  Intel i7-9700            avx avx2 fma sse4_2
+#
+# None has avx512f, so upstream's x86-64-v4 target produces code that cannot run
+# on any of them, and sandybridge is redundant when all three do AVX2. haswell
+# covers the real hardware; generic remains the portable fallback.
+#
+# This is a performance tradeoff, not a correctness one -- Julia selects the best
+# matching variant, so the image still runs anywhere, just without a target-
+# specific build. Re-measure this list if the app-node hardware changes.
+ENV JULIA_CPU_TARGET="generic;haswell,-rdrnd,base(1)"
+
 ENV JULIA_DEPOT_PATH=/opt/julia \
     JULIA_PKGDIR=/opt/julia
 

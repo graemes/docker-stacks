@@ -17,6 +17,12 @@ set -exuo pipefail
 # precompilation may still have to be re-done on first startup - but this
 # *should* catch most of the issues.  See
 # https://github.com/jupyter/docker-stacks/issues/2015 for more information
+# Respect a JULIA_CPU_TARGET set by the image, falling back to upstream's
+# defaults. Julia compiles every package once per target, so the list is a direct
+# multiplier on precompilation time -- ~158s of this script's ~395s runtime.
+# See the ENV in julia-notebook/datascience-notebook for the value used here and
+# the measurements behind it.
+if [ -z "${JULIA_CPU_TARGET:-}" ]; then
 if [ "$(uname -m)" == "x86_64" ]; then
     # See https://github.com/JuliaCI/julia-buildkite/blob/9f354745a1f2bf31a5952462aa1ff2d869507cb8/utilities/build_envs.sh#L23
     # for an explanation of these options
@@ -25,6 +31,7 @@ elif [ "$(uname -m)" == "aarch64" ]; then
     # See https://github.com/JuliaCI/julia-buildkite/blob/9f354745a1f2bf31a5952462aa1ff2d869507cb8/utilities/build_envs.sh#L56
     # for an explanation of these options
     export JULIA_CPU_TARGET="generic;cortex-a57;thunderx2t99;carmel,clone_all;apple-m1,base(3);neoverse-512tvb,base(3)"
+fi
 fi
 
 # Install base Julia packages
