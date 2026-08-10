@@ -39,7 +39,13 @@ RUN apt-get update --yes && \
 # This is a performance tradeoff, not a correctness one -- Julia selects the best
 # matching variant, so the image still runs anywhere, just without a target-
 # specific build. Re-measure this list if the app-node hardware changes.
-ENV JULIA_CPU_TARGET="generic;haswell,-rdrnd,base(1)"
+#
+# No base(N) clause: base(N) requires the referenced target to carry clone_all,
+# which upstream satisfied via sandybridge. With sandybridge removed there is no
+# valid base to reference -- base(1) fails "base index must refer to a previous
+# target" and base(0) fails "base target must be clone_all". Verified against a
+# real precompile; only the bare form builds.
+ENV JULIA_CPU_TARGET="generic;haswell,-rdrnd"
 
 ENV JULIA_DEPOT_PATH=/opt/julia \
     JULIA_PKGDIR=/opt/julia
