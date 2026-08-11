@@ -77,7 +77,13 @@ USER ${NB_UID}
 #
 # 1800s against a ~395s healthy run is ~4.5x headroom. --kill-after escalates to
 # SIGKILL, because a deadlocked Julia does not necessarily service a TERM.
-RUN timeout --kill-after=60 1800 /opt/setup-scripts/setup-julia-packages.bash \
+# JULIA_NUM_PRECOMPILE_TASKS=1 serialises Pkg.precompile(). Build 4996 deadlocked
+# here for the full 1800s on a REPL precompile worker at 1.6% CPU (three of the
+# four julia precompiles in that run succeeded -- it is a race, not a hard break).
+# Scoped to this RUN, not ENV, so images do not ship serial precompilation to
+# users at runtime. This is a MITIGATION: the upstream hang is not root-caused.
+RUN JULIA_NUM_PRECOMPILE_TASKS=1 \
+    timeout --kill-after=60 1800 /opt/setup-scripts/setup-julia-packages.bash \
     || { rc=$?; \
          echo "ERROR: julia package setup failed (rc=${rc}; 124/137 mean the \
 1800s deadline was exceeded -- suspect a Pkg.precompile deadlock)" >&2; \
